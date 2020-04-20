@@ -1,5 +1,5 @@
 export default {
-    endpoint: 'https://dialogflow-web-v2.core.ushaflow.io', // <- enter your gateway URL here
+    endpoint: 'http://localhost:3000', // <- enter your gateway URL here
     muted: false, // <- mute microphone at start
     start_suggestions: [], // <- array of suggestions, displayed at the start screen
     fallback_lang: 'en', // <- fallback language code, if history mode or network is unavailable
