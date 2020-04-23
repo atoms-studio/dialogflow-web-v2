@@ -67,7 +67,8 @@
     font-weight: 500
     width: 100%
     box-sizing: border-box
-    border: none
+    border-color: 0.5px solid var(--border)
+    border-style: solid
     padding: 10px 12px
     color: var(--text)
     border-radius: 40px

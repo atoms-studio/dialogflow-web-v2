@@ -7,7 +7,7 @@
     padding: 12px
     border-radius: 40px
     color: var(--text)
-    border: 1px solid var(--border)
+    border: 1px solid #E8EAED
     display: inline-block
     position: relative
     background-color: var(--background)

@@ -23,7 +23,7 @@
     background-color: var(--element-background)
     padding: 16px
     border-radius: 16px
-    overflow: scroll
+    overflow: hidden
 </style>
 
 <script>
