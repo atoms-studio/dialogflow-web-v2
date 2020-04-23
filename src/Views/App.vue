@@ -25,18 +25,21 @@
                     <BubbleWrapper><Bubble v-if="message.queryResult.queryText" :text="message.queryResult.queryText" me /></BubbleWrapper>
 
                     <!-- Dialogflow Components -->
-                    <RichComponent v-for="(component, component_id) in message.queryResult.fulfillmentMessages" :key="component_id">
+                    <RichComponent v-for="(component, component_id) in [message.queryResult.fulfillmentMessages[0]]" :key="component_id">
                         <!-- Text (https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#Text) -->
-                        <Bubble v-if="component.text" :text="component.text.text[0]" />
-
+                        <div class="Text">
+                            <Bubble v-if="component.text" :text="component.text.text[0]" />
+                        </div>
                         <!-- SimpleResponses (https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#SimpleResponses) -->
-                        <Bubble
-                            v-if="component.simpleResponses"
-                            :text="component.simpleResponses.simpleResponses[0].displayText || component.simpleResponses.simpleResponses[0].textToSpeech"
-                        />
+                        <div class="SimpleResponses">
+                            <Bubble
+                                v-if="component.simpleResponses"
+                                :text="component.simpleResponses.simpleResponses[0].displayText || component.simpleResponses.simpleResponses[0].textToSpeech"
+                            />
+                        </div>
 
                         <!-- RbmText (https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#rbmtext) -->
-                        <div v-if="component.rbmText">
+                        <div v-if="component.rbmText" class="RbmText">
                             <Bubble :text="component.rbmText.text" />
                             <div v-for="(suggestion, suggestion_id) in component.rbmText.rbmSuggestion" :key="suggestion_id">
                                 <CardButton
@@ -190,7 +193,7 @@
                     </RichComponent>
 
                     <!-- Actions on Google Components -->
-                    <section v-if="message.queryResult.webhookPayload && message.queryResult.webhookPayload.google">
+                    <section v-if="message.queryResult.webhookPayload && message.queryResult.webhookPayload.google" class="googleComponents">
                         <RichComponent v-for="(component, component_id) in message.queryResult.webhookPayload.google.richResponse.items" :key="component_id">
                             <!-- Simple response (https://developers.google.com/actions/assistant/responses#simple_response) -->
                             <Bubble
