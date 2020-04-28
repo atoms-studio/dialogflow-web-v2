@@ -2,7 +2,7 @@
     <div class="overlay">
         <!-- Agent Icon -->
         <img v-if="app.avatarUri" class="app-icon" :alt="app.displayName" :src="app.avatarUri">
-        <img v-else class="app-icon" src="https://console.dialogflow.com/api-client/assets/img/logo-short.png" :alt="app.displayName">
+        <img v-else class="app-icon" src="img/logo.jpg" :alt="app.displayName">
 
         <!-- Agent Title -->
         <h1 class="app-title">{{app.displayName}}</h1>

@@ -25,7 +25,7 @@
                     <BubbleWrapper><Bubble v-if="message.queryResult.queryText" :text="message.queryResult.queryText" me /></BubbleWrapper>
 
                     <!-- Dialogflow Components -->
-                    <RichComponent v-for="(component, component_id) in message.queryResult.fulfillmentMessages" :key="component_id">
+                    <RichComponent v-for="(component, component_id) in message.queryResult.fulfillmentMessages" :key="component_id" class="dialogflow">
                         <!-- Text (https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#Text) -->
                         <div class="Text">
                             <Bubble v-if="component.text" :text="component.text.text[0]" />

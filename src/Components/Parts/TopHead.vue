@@ -1,9 +1,9 @@
 <template>
     <header class="app-head">
         <img v-if="app.avatarUri" class="app-icon" :alt="app.displayName" :src="app.avatarUri">
-        <img v-else class="app-icon" src="https://console.dialogflow.com/api-client/assets/img/logo-short.png" :alt="app.displayName">
+        <img v-else class="app-icon" src="img/logo.jpg" :alt="app.displayName">
         <div class="app-info">
-            <div class="app-name">{{app.displayName}}</div>
+            <!-- <div class="app-name">{{app.displayName}}</div> -->
         </div>
         <slot />
     </header>
@@ -23,8 +23,8 @@
 
     .app-icon
         border-radius: 8px
-        width: 30px
-        height: 30px
+        width: 40px
+        height: 40px
         object-fit: cover
         background-color: var(--image-background)
 
