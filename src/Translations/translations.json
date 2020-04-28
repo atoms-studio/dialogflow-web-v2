@@ -27,5 +27,13 @@
         "inputTitle": "Message",
         "sendTitle": "Envoyer",
         "microphoneTitle": "Entrée vocale"
+    },
+    "it": {
+        "muteTitle": "Muta",
+        "unMuteTitle": "Unmuta",
+        "inputTitle": "Messaggio",
+        "sendTitle": "Invia",
+        "microphoneTitle": "Input Vocale",
+        "recognitionUnavailable": "Riconoscimento vocale non disponbile"
     }
 }
