@@ -1,10 +1,5 @@
 <template>
     <main id="app">
-        <div class="uploadFile">
-            <FileUpload />
-        </div>
-
-
         <!-- TopHead is the header with the information about the app -->
         <TopHead v-if="app && messages.length > 0" :app="app">
             <!-- Audio toggle (on the top right corner), used to toggle the audio output, default mode is defined in the settings -->
@@ -311,6 +306,10 @@
             </section>
         </section>
 
+        <div v-if="lastMessage && lastMessage.queryResult.uploadFile" class="uploadFile">
+            <FileUpload @uploaded="uploaded" />
+        </div>
+
         <!-- ChatInput is made for submitting queries and displaying suggestions -->
         <ChatInput ref="input" @submit="send">
             <!-- Suggestion chips
@@ -423,9 +422,15 @@ export default {
     },
     computed: {
         /* The code below is used to extract suggestions from last message, to display it on ChatInput */
+        lastMessage(){
+            if (this.messages.length > 0){
+                return this.messages[this.messages.length - 1]
+            }
+            return undefined
+        },
         suggestions(){
             if (this.messages.length > 0){
-                const last_message = this.messages[this.messages.length - 1]
+                const last_message = this.lastMessage
                 const suggestions = []
 
                 /* Dialogflow Suggestions */
@@ -500,6 +505,10 @@ export default {
         }
     },
     methods: {
+        uploaded(url){
+            console.log('uploaded:', url)
+            this.send({text: url})
+        },
         send(submission){
             let request
 

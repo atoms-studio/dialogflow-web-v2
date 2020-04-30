@@ -1,10 +1,10 @@
 <template>
     <div class="uploadPdfFields">
-        <div v-if="stateUpload === 'uploaded' || stateUpload === 'uploadedError'" class="uploadedText">
+        <div v-if="stateUpload === 'uploadedError'" class="uploadedText">
             <p>{{message}}</p>
-            <div v-if="uploadedFileUrl !== ''">
+            <!--<div v-if="uploadedFileUrl !== ''">
                 <a :href="uploadedFileUrl" target="_blank">Uploaded File Preview</a>
-            </div>
+            </div>-->
         </div>
 
         <SpinnerLoader v-if="stateUpload === 'uploading'" />
@@ -53,11 +53,12 @@
 <style scoped>
 .uploadPdfFields {
   text-align: center;
-  position: absolute;
-  z-index: 10;
+  position: fixed;
+  z-index: 1000;
   background: white;
-  width: 100vw;
+  width: 98vw;
   height: 100vh;
+  top: 0px;
 }
 
 .box.has-advanced-upload {
@@ -186,6 +187,8 @@ export default {
                     this.stateUpload = 'uploaded'
                     this.uploadedFileUrl = response.data.data
                     this.message = response.data.message
+
+                    this.$emit('uploaded', this.uploadedFileUrl)
                 } else {
                     this.stateUpload = 'uploadedError'
                     throw response.data.error
