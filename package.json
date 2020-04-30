@@ -10,13 +10,13 @@
   },
   "dependencies": {
     "audio-recorder-polyfill": "^0.3.4",
+    "axios": "^0.19.2",
     "core-js": "^3.6.4",
     "dialogflow-gateway": "0.0.7",
     "hark": "^1.2.3",
     "langs": "^2.0.0",
     "register-service-worker": "^1.7.1",
-    "vue": "^2.6.11",
-    "vue-upload-component": "^2.8.20"
+    "vue": "^2.6.11"
   },
   "devDependencies": {
     "@mishushakov/eslint-config": "^1.0.6",

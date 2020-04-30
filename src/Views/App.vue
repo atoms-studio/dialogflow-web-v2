@@ -1,5 +1,10 @@
 <template>
     <main id="app">
+        <div class="uploadFile">
+            <FileUpload />
+        </div>
+
+
         <!-- TopHead is the header with the information about the app -->
         <TopHead v-if="app && messages.length > 0" :app="app">
             <!-- Audio toggle (on the top right corner), used to toggle the audio output, default mode is defined in the settings -->
@@ -11,6 +16,7 @@
                 <i aria-hidden="true" class="material-icons">{{muted ? 'volume_off': 'volume_up'}}</i>
             </button>
         </TopHead>
+
         <section class="container chat-container">
             <!-- Error component is for displaying errors -->
             <Error v-if="error" :error="error" />
@@ -380,6 +386,8 @@ import * as uuidv1 from 'uuid/v1'
 
 import { Client } from 'dialogflow-gateway'
 
+import FileUpload from '@/Components/FileUpload.vue'
+
 export default {
     name: 'App',
     components: {
@@ -398,7 +406,8 @@ export default {
         Picture,
         Media,
         TableCard,
-        Suggestion
+        Suggestion,
+        FileUpload
     },
     data(){
         return {
