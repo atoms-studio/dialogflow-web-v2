@@ -2,9 +2,6 @@
     <div class="uploadPdfFields">
         <div v-if="stateUpload === 'uploadedError'" class="uploadedText">
             <p>{{message}}</p>
-            <!--<div v-if="uploadedFileUrl !== ''">
-                <a :href="uploadedFileUrl" target="_blank">Uploaded File Preview</a>
-            </div>-->
         </div>
 
         <SpinnerLoader v-if="stateUpload === 'uploading'" />
@@ -56,7 +53,7 @@
   position: fixed;
   z-index: 1000;
   background: white;
-  width: 98vw;
+  width: 100vw;
   height: 100vh;
   top: 0px;
 }
