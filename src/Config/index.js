@@ -1,6 +1,6 @@
 export default {
     endpoint: 'http://localhost', // <- enter your gateway URL here
-    //endpoint: 'http://chatbot-das-dev.demomwd.it', // <- enter your gateway URL here
+    // endpoint: 'https://chatbot-das-dev.demomwd.it', // <- enter your gateway URL here
     muted: false, // <- mute microphone at start
     start_suggestions: [], // <- array of suggestions, displayed at the start screen
     fallback_lang: 'en', // <- fallback language code, if history mode or network is unavailable
