@@ -344,6 +344,7 @@
 </template>
 
 <style lang="sass">
+@import '@/Style/Reset.sass'
 @import '@/Style/Theme.sass'
 
 body
