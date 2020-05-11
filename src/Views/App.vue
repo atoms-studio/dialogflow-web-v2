@@ -1,5 +1,5 @@
 <template>
-    <main id="app">
+    <main id="app_chatbot_das">
         <!-- TopHead is the header with the information about the app -->
         <TopHead v-if="app && messages.length > 0" :app="app">
             <!-- Audio toggle (on the top right corner), used to toggle the audio output, default mode is defined in the settings -->
@@ -346,7 +346,7 @@
 @import '@/Style/Reset.sass'
 @import '@/Style/Theme.sass'
 
-#app
+#app_chatbot_das
     margin: 0
     padding: 0
     font-family: var(--font)
