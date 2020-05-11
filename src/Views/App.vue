@@ -23,7 +23,7 @@
             <section v-else aria-live="polite">
                 <div v-for="message in messages" id="message" :key="message.responseId">
                     <!-- My message -->
-                    <BubbleWrapper><Bubble v-if="message.queryResult.queryText" :text="message.queryResult.queryText" me /></BubbleWrapper>
+                    <BubbleWrapper><UserBubble v-if="message.queryResult.queryText" :text="message.queryResult.queryText" me /></BubbleWrapper>
 
                     <RichComponent v-if="message.queryResult.knowledgeAnswers && message.queryResult.knowledgeAnswers.answers" class="knowledgeAnswer">
                         <Bubble
@@ -376,6 +376,7 @@ import ChatInput from '@/Components/Parts/ChatInput.vue'
 
 import RichComponent from '@/Components/Rich/Component.vue'
 import Bubble from '@/Components/Rich/Bubble.vue'
+import UserBubble from '@/Components/Rich/UserBubble.vue'
 import BubbleWrapper from '@/Components/Rich/BubbleWrapper.vue'
 import Card from '@/Components/Rich/Card.vue'
 import CardButton from '@/Components/Rich/CardButton.vue'
@@ -402,6 +403,7 @@ export default {
         ChatInput,
         RichComponent,
         Bubble,
+        UserBubble,
         BubbleWrapper,
         Card,
         CardButton,
