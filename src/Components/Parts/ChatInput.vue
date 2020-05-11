@@ -81,6 +81,9 @@
     &:focus
         background-color: transparent
 
+.input:disabled
+    opacity: 0.25
+
 .button
     @include reset
     padding: 8px
@@ -98,6 +101,7 @@
 
 .button:disabled
     cursor: auto
+    opacity: 0.25
 
 </style>
 
