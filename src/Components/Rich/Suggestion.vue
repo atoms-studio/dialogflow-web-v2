@@ -15,7 +15,6 @@
 
 .suggestion
     @include reset
-    display: inline-block
     padding: 8px 12px
     border-radius: 40px
     border: 1px solid var(--border)

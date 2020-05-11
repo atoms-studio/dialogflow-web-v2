@@ -47,7 +47,7 @@
 @import '@/Style/Mixins'
 
 .bottomchat
-    position: fixed
+    position: relative
     bottom: 0
     left: 0
     width: 100%
@@ -57,10 +57,10 @@
     display: flex
 
 .suggestions
-    overflow-x: scroll
-    overflow-y: hidden
     white-space: nowrap
-    -webkit-overflow-scrolling: touch
+    display: flex
+    flex-direction: row
+    flex-wrap: wrap
 
     &::-webkit-scrollbar
         display: none

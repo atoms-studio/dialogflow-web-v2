@@ -365,7 +365,7 @@ body
 <style lang="sass" scoped>
 .chat-container
     padding-top: 80px
-    padding-bottom: 125px
+    padding-bottom: 25px
 </style>
 
 <script>
