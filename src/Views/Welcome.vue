@@ -11,13 +11,13 @@
         <p class="app-description">{{app.description}}</p>
 
         <!-- Language picker, if your Agent supports more than one language -->
-        <div v-if="app.supportedLanguageCodes && app.supportedLanguageCodes.length > 0" class="language-picker">
+        <!-- <div v-if="app.supportedLanguageCodes && app.supportedLanguageCodes.length > 0" class="language-picker">
             <select v-model="sel_lang">
                 <option :value="app.defaultLanguageCode">{{app.defaultLanguageCode | toLang}}</option>
                 <option v-for="language in app.supportedLanguageCodes" :key="language" :value="language">{{language | toLang}}</option>
             </select>
             <i aria-hidden="true" class="material-icons">arrow_drop_down</i>
-        </div>
+        </div> -->
     </div>
 </template>
 
