@@ -2,8 +2,8 @@
     <div class="media">
         <img v-if="iconUri" class="media-image" :src="iconUri" :alt="iconTitle">
         <div class="media-content">
-            <div v-if="name" class="media-title">{{name}}</div>
-            <div v-if="description" class="media-subtitle">{{description}}</div>
+            <div v-if="name" class="media-title" v-html="marked(name)" />
+            <div v-if="description" class="media-subtitle" v-html="marked(description)" />
         </div>
         <audio class="media-controls" controls :src="uri" />
     </div>
@@ -47,8 +47,11 @@
 </style>
 
 <script>
+import MarkdownMixin from '@/Mixins/Markdown.vue'
+
 export default {
     name: 'Media',
+    mixins: [MarkdownMixin],
     props: {
         name: {
             type: String,
@@ -71,5 +74,6 @@ export default {
             default: null
         }
     }
+
 }
 </script>

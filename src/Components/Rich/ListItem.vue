@@ -6,9 +6,9 @@
             target="_blank"
             rel="noopener noreferrer"
             :href="uri">
-            <div class="list-item-title">{{title}}</div>
-            <span class="list-item-description">{{description}}</span>
-            <span class="list-item-footer">{{footer}}</span>
+            <div class="list-item-title" v-html="marked(title)" />
+            <span class="list-item-description" v-html="marked(description)" />
+            <span class="list-item-footer" v-html="marked(footer)" />
         </a>
     </li>
 </template>
@@ -60,8 +60,11 @@
 </style>
 
 <script>
+import MarkdownMixin from '@/Mixins/Markdown.vue'
+
 export default {
     name: 'ListItem',
+    mixins: [MarkdownMixin],
     props: {
         imageUri: {
             type: String,
@@ -88,5 +91,6 @@ export default {
             default: null
         }
     }
+
 }
 </script>

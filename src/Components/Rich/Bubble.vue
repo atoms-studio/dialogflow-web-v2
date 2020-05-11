@@ -1,5 +1,5 @@
 <template>
-    <div class="bubble" tabindex="0" :class="{'me': me, 'loading': loading}">{{text}}</div>
+    <div class="bubble" tabindex="0" :class="{'me': me, 'loading': loading}" v-html="marked(text)" />
 </template>
 
 <style lang="sass" scoped>
@@ -53,8 +53,11 @@
 </style>
 
 <script>
+import MarkdownMixin from '@/Mixins/Markdown.vue'
+
 export default {
     name: 'Bubble',
+    mixins: [MarkdownMixin],
     props: {
         text: {
             type: String,
