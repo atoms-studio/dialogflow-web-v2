@@ -6,7 +6,8 @@
     "serve": "vue-cli-service serve --open",
     "build": "vue-cli-service build",
     "devbuild": "vue-cli-service build --mode development && rm  -r ../das-dialogflow-gateway/dist/ && mv dist ../das-dialogflow-gateway/ ",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "buildwc": "vue-cli-service build --target wc --name chatbot-das src/Views/App.vue"
   },
   "dependencies": {
     "@types/marked": "^0.7.4",
