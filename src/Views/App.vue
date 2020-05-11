@@ -25,6 +25,12 @@
                     <!-- My message -->
                     <BubbleWrapper><Bubble v-if="message.queryResult.queryText" :text="message.queryResult.queryText" me /></BubbleWrapper>
 
+                    <RichComponent v-if="message.queryResult.knowledgeAnswers && message.queryResult.knowledgeAnswers.answers" class="knowledgeAnswer">
+                        <Bubble
+                            :text="message.queryResult.knowledgeAnswers.answers[0].answer"
+                        />
+                    </RichComponent>
+
                     <!-- Dialogflow Components -->
                     <RichComponent v-for="(component, component_id) in message.queryResult.fulfillmentMessages" :key="component_id" class="dialogflow">
                         <!-- Text (https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#Text) -->
@@ -311,7 +317,7 @@
         </div>
 
         <!-- ChatInput is made for submitting queries and displaying suggestions -->
-        <ChatInput ref="input" @submit="send">
+        <ChatInput ref="input" :disabled="messages.length < 3" @submit="send">
             <!-- Suggestion chips
                 https://developers.google.com/actions/assistant/responses#suggestion_chips
                 https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#QuickReplies
@@ -556,37 +562,41 @@ export default {
         },
         handle(response){
             /* This function is used for speech output */
-            if (response.outputAudio){
-                const output = new Audio(`data:audio/mp3;base64,${response.outputAudio}`)
-                output.onended = () => this.$refs.input.listen()
+            /*
+             * if (response.outputAudio){
+             *     const output = new Audio(`data:audio/mp3;base64,${response.outputAudio}`)
+             *     output.onended = () => this.$refs.input.listen()
+             */
 
-                if (!this.muted) output.play()
+            /*
+             *     if (!this.muted) output.play()
+             * }
+             */
+
+            // else {
+            let text // <- init a text variable
+
+            /* Dialogflow Text/SimpleResponses */
+            for (const component in response.queryResult.fulfillmentMessages){
+                if (response.queryResult.fulfillmentMessages[component].text) text = response.queryResult.fulfillmentMessages[component].text.text[0]
+                if (response.queryResult.fulfillmentMessages[component].simpleResponses) text = response.queryResult.fulfillmentMessages[component].simpleResponses.simpleResponses[0].textToSpeech
+                if (response.queryResult.fulfillmentMessages[component].rbmText) text = response.queryResult.fulfillmentMessages[component].rbmText.text
             }
 
-            else {
-                let text // <- init a text variable
-
-                /* Dialogflow Text/SimpleResponses */
-                for (const component in response.queryResult.fulfillmentMessages){
-                    if (response.queryResult.fulfillmentMessages[component].text) text = response.queryResult.fulfillmentMessages[component].text.text[0]
-                    if (response.queryResult.fulfillmentMessages[component].simpleResponses) text = response.queryResult.fulfillmentMessages[component].simpleResponses.simpleResponses[0].textToSpeech
-                    if (response.queryResult.fulfillmentMessages[component].rbmText) text = response.queryResult.fulfillmentMessages[component].rbmText.text
+            /* Actions on Google Simple response */
+            if (response.queryResult.webhookPayload && response.queryResult.webhookPayload.google){
+                for (const component in response.queryResult.webhookPayload.google){
+                    if (response.queryResult.webhookPayload.google[component].simpleResponse) text = response.queryResult.webhookPayload.google[component].simpleResponse.textToSpeech
                 }
-
-                /* Actions on Google Simple response */
-                if (response.queryResult.webhookPayload && response.queryResult.webhookPayload.google){
-                    for (const component in response.queryResult.webhookPayload.google){
-                        if (response.queryResult.webhookPayload.google[component].simpleResponse) text = response.queryResult.webhookPayload.google[component].simpleResponse.textToSpeech
-                    }
-                }
-
-                const speech = new SpeechSynthesisUtterance(text)
-                speech.voiceURI = this.config.voice
-                speech.lang = this.lang()
-                speech.onend = () => this.$refs.input.listen()
-
-                if (!this.muted) window.speechSynthesis.speak(speech) // <- if app is not muted, speak out the speech
             }
+
+            const speech = new SpeechSynthesisUtterance(text)
+            speech.voiceURI = this.config.voice
+            speech.lang = this.lang()
+            speech.onend = () => this.$refs.input.listen()
+
+            if (!this.muted) window.speechSynthesis.speak(speech) // <- if app is not muted, speak out the speech
+            // }
         }
     }
 }

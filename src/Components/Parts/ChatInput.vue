@@ -7,6 +7,7 @@
                 <!-- Text input -->
                 <input
                     v-model="query"
+                    :disabled="disabled"
                     class="input"
                     type="text"
                     autofocus
@@ -18,6 +19,7 @@
                 <!-- Send message button (arrow button) -->
                 <button
                     v-if="!microphone && query.length > 0 || !microphone_supported"
+                    :disabled="disabled"
                     class="button"
                     :title="(translations[lang()] && translations[lang()].sendTitle) || translations[config.fallback_lang].sendTitle"
                     :aria-label="(translations[lang()] && translations[lang()].sendTitle) || translations[config.fallback_lang].sendTitle"
@@ -28,6 +30,7 @@
                 <!-- Microphone Button -->
                 <button
                     v-else
+                    :disabled="disabled"
                     class="button"
                     :aria-label="(translations[lang()] && translations[lang()].microphoneTitle) || translations[config.fallback_lang].microphoneTitle"
                     :title="(translations[lang()] && translations[lang()].microphoneTitle) || translations[config.fallback_lang].microphoneTitle"
@@ -92,6 +95,10 @@
     &.mic_active
         background-color: #F44336
         color: white
+
+.button:disabled
+    cursor: auto
+
 </style>
 
 <script>
@@ -102,6 +109,12 @@ window.MediaRecorder = AudioRecorder
 
 export default {
     name: 'ChatInput',
+    props: {
+        disabled: {
+            type: Boolean,
+            default: false
+        }
+    },
     data(){
         return {
             query: '',
