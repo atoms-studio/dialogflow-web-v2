@@ -1,5 +1,5 @@
 <template>
-    <div class="bottomchat">
+    <div ref="chatInput" class="bottomchat" :class="[inputFixed ? 'fixed' : 'relative']">
         <div class="container">
             <!-- Here are the suggestions -->
             <div class="suggestions"><slot /></div>
@@ -43,11 +43,10 @@
     </div>
 </template>
 
-<style lang="sass" scoped>
+<style lang="sass">
 @import '@/Style/Mixins'
 
 .bottomchat
-    position: relative
     bottom: 0
     left: 0
     width: 100%
@@ -117,6 +116,10 @@ export default {
         disabled: {
             type: Boolean,
             default: false
+        },
+        messages: {
+            type: Array,
+            default: () => []
         }
     },
     data(){
@@ -125,7 +128,8 @@ export default {
             microphone: false,
             recognition: null,
             recorder: null,
-            should_listen: false
+            should_listen: false,
+            inputFixed: false
         }
     },
     computed: {
@@ -134,6 +138,10 @@ export default {
         }
     },
     watch: {
+        // eslint-disable-next-line no-unused-vars
+        messages(messages){
+            this.chatInputPosition()
+        },
         /* Toggle microphone */
         microphone(activate){
             if (activate){
@@ -183,7 +191,20 @@ export default {
             else if (this.recorder) this.recorder.stop()
         }
     },
+    mounted(){
+        this.chatInputPosition()
+        window.addEventListener('resize', this.chatInputPosition)
+    },
     methods: {
+        chatInputPosition(){
+            const appChatHeight = document.getElementById('app').clientHeight
+            const bubblesHeight = document.getElementsByClassName('chat-container')[0].clientHeight
+            const chatInput = this.$refs.chatInput.clientHeight
+
+            const spaceForChatInput = appChatHeight - bubblesHeight
+            // console.log(appChatHeight, bubblesHeight, chatInput)
+            this.inputFixed = chatInput < spaceForChatInput
+        },
         listen(){
             if (this.should_listen) this.microphone = true
         },
@@ -192,7 +213,6 @@ export default {
                 this.$emit('submit', submission)
                 this.query = ''
             }
-
             else if (submission.audio) this.$emit('submit', submission)
         }
     }
