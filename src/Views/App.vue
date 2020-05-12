@@ -358,7 +358,7 @@
     font-family: var(--font)
     font-display: swap
     background-color: var(--background)
-    height: 100vh
+    min-height: 100vh
 
 .container
     max-width: 500px
@@ -366,8 +366,6 @@
     margin-right: auto
     padding: 12px
     position: relative
-    max-height: 50vh
-    overflow-y: auto
 
 .chat-container
     padding-top: 80px
