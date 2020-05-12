@@ -358,7 +358,7 @@
     font-family: var(--font)
     font-display: swap
     background-color: var(--background)
-    min-height: 100vh
+    min-height: 100%
 
 .container
     max-width: 500px

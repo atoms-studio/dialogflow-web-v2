@@ -129,7 +129,7 @@ export default {
             recognition: null,
             recorder: null,
             should_listen: false,
-            inputFixed: false
+            inputFixed: true
         }
     },
     computed: {
