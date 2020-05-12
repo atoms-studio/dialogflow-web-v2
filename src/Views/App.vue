@@ -17,6 +17,7 @@
             <Error v-if="error" :error="error" />
 
             <!-- Welcome component is for onboarding experience and language picker -->
+            <Picture uri="https://source.unsplash.com/random" title="title" @openInOverlay="openOverlay" />
             <Welcome v-if="app && messages.length == 0" :app="app" />
 
             <!-- Messages Table -->
@@ -166,7 +167,7 @@
                         </List>
 
                         <!-- Image (https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#Image) -->
-                        <Picture v-if="component.image" :uri="component.image.imageUri" :title="component.image.accessibilityText" />
+                        <Picture v-if="component.image" :uri="component.image.imageUri" :title="component.image.accessibilityText" @openInOverlay="openOverlay" />
 
                         <!-- Media (https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#MediaContent) -->
                         <div v-if="component.mediaContent && component.mediaContent.mediaObjects">
@@ -340,6 +341,13 @@
                 :uri="suggestions.link_suggestion.uri || suggestions.link_suggestion.url"
             />
         </ChatInput>
+
+        <OverlayImage
+            :img="overlayImg"
+            :show="showOverlay"
+            @closeOverlay="closeOverlay"
+            @closeAnimationEnded="removeOverlayImage"
+        />
     </main>
 </template>
 
@@ -388,6 +396,8 @@ import Picture from '@/Components/Rich/Picture.vue'
 import Media from '@/Components/Rich/Media.vue'
 import TableCard from '@/Components/Rich/TableCard.vue'
 import Suggestion from '@/Components/Rich/Suggestion.vue'
+import OverlayImage from '@/Components/OverlayImage.vue'
+import OverlayMixin from '@/Mixins/OverlayMixin.vue'
 
 import * as uuidv1 from 'uuid/v1'
 
@@ -415,8 +425,10 @@ export default {
         Media,
         TableCard,
         Suggestion,
-        FileUpload
+        FileUpload,
+        OverlayImage
     },
+    mixins: [OverlayMixin],
     data(){
         return {
             app: null,
