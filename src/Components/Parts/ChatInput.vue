@@ -197,8 +197,8 @@ export default {
     },
     methods: {
         chatInputPosition(){
-            const appChatHeight = document.getElementById('app_chatbot_das').clientHeight
-            const bubblesHeight = document.getElementsByClassName('chat-container')[0].clientHeight
+            const appChatHeight = this.$parent.$refs.app.clientHeight
+            const bubblesHeight = this.$parent.$refs.bubbles.clientHeight
             const chatInput = this.$refs.chatInput.clientHeight
 
             const spaceForChatInput = appChatHeight - bubblesHeight

@@ -1,5 +1,5 @@
 <template>
-    <main id="app_chatbot_das">
+    <main id="app_chatbot_das" ref="app">
         <!-- TopHead is the header with the information about the app -->
         <TopHead v-if="app && messages.length > 0" :app="app">
             <!-- Audio toggle (on the top right corner), used to toggle the audio output, default mode is defined in the settings -->
@@ -12,7 +12,7 @@
             </button>
         </TopHead>
 
-        <section class="container chat-container">
+        <section ref="bubbles" class="container chat-container">
             <!-- Error component is for displaying errors -->
             <Error v-if="error" :error="error" />
 
