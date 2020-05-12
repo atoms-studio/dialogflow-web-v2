@@ -317,7 +317,7 @@
         </div>
 
         <!-- ChatInput is made for submitting queries and displaying suggestions -->
-        <ChatInput ref="input" :disabled="messages.length < 3" @submit="send">
+        <ChatInput ref="input" :disabled="messages.length < 3" :messages="messages" @submit="send">
             <!-- Suggestion chips
                 https://developers.google.com/actions/assistant/responses#suggestion_chips
                 https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#QuickReplies
@@ -346,12 +346,19 @@
 @import '@/Style/Reset.sass'
 @import '@/Style/Theme.sass'
 
+.relative
+    position: relative
+
+.fixed
+    position: fixed
+
 #app_chatbot_das
     margin: 0
     padding: 0
     font-family: var(--font)
     font-display: swap
     background-color: var(--background)
+    height: 100vh
 
 .container
     max-width: 500px
@@ -364,7 +371,7 @@
 
 .chat-container
     padding-top: 80px
-    padding-bottom: 125px
+    padding-bottom: 25px
 </style>
 
 <script>
