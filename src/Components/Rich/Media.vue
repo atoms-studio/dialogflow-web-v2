@@ -5,7 +5,7 @@
             class="media-image overlay-image"
             :src="iconUri"
             :alt="iconTitle"
-            @click="$emit('openInOverlay', $event.target)">
+            @click.stop="$emit('openInOverlay', $event.target)">
         <div class="media-content">
             <div v-if="name" class="media-title" v-html="marked(name)" />
             <div v-if="description" class="media-subtitle" v-html="marked(description)" />

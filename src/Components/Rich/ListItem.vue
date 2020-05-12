@@ -5,7 +5,7 @@
             class="list-item-image overlay-image"
             :src="imageUri"
             :alt="imageTitle"
-            @click="$emit('openInOverlay', $event.target)">
+            @click.stop="$emit('openInOverlay', $event.target)">
         <a
             class="list-item-content"
             target="_blank"

@@ -5,7 +5,7 @@
             class="card-image overlay-image"
             :src="imageUri"
             :alt="imageTitle || title"
-            @click="$emit('openInOverlay', $event.target)">
+            @click.stop="$emit('openInOverlay', $event.target)">
         <div class="card-content">
             <div v-if="title" class="card-title" v-html="marked(title)" />
             <div v-if="subtitle" class="card-subtitle" v-html="marked(subtitle)" />

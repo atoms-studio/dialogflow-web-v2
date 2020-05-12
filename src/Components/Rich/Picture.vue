@@ -1,5 +1,5 @@
 <template>
-    <img class="picture overlay-image" :src="uri" :alt="title" @click="$emit('openInOverlay', $event.target)">
+    <img class="picture overlay-image" :src="uri" :alt="title" @click.stop="$emit('openInOverlay', $event.target)">
 </template>
 
 <style lang="sass" scoped>

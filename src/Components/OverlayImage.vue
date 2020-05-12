@@ -1,6 +1,6 @@
 <template>
     <transition name="fade" @after-leave="$emit('closeAnimationEnded')">
-        <div v-show="show" class="overlay" @click="$emit('closeOverlay')">
+        <div v-show="show" class="overlay" @click.stop="$emit('closeOverlay')">
             <span class="close-icon">x</span>
             <img v-if="img" class="image" :src="img.src" :alt="img.alt">
         </div>
