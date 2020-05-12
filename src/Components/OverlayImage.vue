@@ -24,7 +24,6 @@ export default {
 
 <style lang="scss" scoped>
 .overlay {
-  padding: 5vw;
   position: fixed;
   top: 0;
   right: 0;
