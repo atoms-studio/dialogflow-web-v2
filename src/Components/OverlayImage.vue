@@ -1,8 +1,8 @@
 <template>
     <transition name="fade" @after-leave="$emit('closeAnimationEnded')">
-        <div v-show="show" class="overlay">
-            <span class="close-icon" @click="$emit('closeOverlay')">x</span>
-            <img v-if="img" :src="img.src" :alt="img.alt">
+        <div v-show="show" class="overlay" @click="$emit('closeOverlay')">
+            <span class="close-icon">x</span>
+            <img v-if="img" class="image" :src="img.src" :alt="img.alt">
         </div>
     </transition>
 </template>
@@ -24,6 +24,7 @@ export default {
 
 <style lang="scss" scoped>
 .overlay {
+  padding: 5vw;
   position: fixed;
   top: 0;
   right: 0;
@@ -31,12 +32,21 @@ export default {
   left: 0;
   z-index: 1000;
   background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: zoom-out;
+}
+
+.image {
+  max-width: 100vw;
+  max-height: 100vh;
 }
 
 .close-icon {
   position: absolute;
-  top: 50px;
-  right: 50px;
+  top: 2.5vw;
+  right: 2.5vw;
   cursor: pointer;
 }
 

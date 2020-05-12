@@ -1,6 +1,11 @@
 <template>
     <li class="list-item" tabindex="0">
-        <img v-if="imageUri" class="list-item-image" :src="imageUri" :alt="imageTitle">
+        <img
+            v-if="imageUri"
+            class="list-item-image overlay-image"
+            :src="imageUri"
+            :alt="imageTitle"
+            @click="$emit('openInOverlay', $event.target)">
         <a
             class="list-item-content"
             target="_blank"
