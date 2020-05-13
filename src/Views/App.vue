@@ -252,8 +252,8 @@
                                     :footer="item.footer"
                                     :image-uri="item.image.url"
                                     :image-title="item.image.accessibilityText"
-                                    @openInOverlay="message.queryResult.action !== 'Fine.Fine-no' ? openOverlay : null">
-                                    />
+                                    @openInOverlay="message.queryResult.action !== 'Fine.Fine-no' ? openOverlay : null"
+                                />
                                 </listitem>
                             </List>
 
@@ -267,8 +267,8 @@
                                     :icon-uri="media.icon.url"
                                     :icon-title="media.icon.accessibilityText"
                                     :uri="media.contentUrl"
-                                    @openInOverlay="message.queryResult.action !== 'Fine.Fine-no' ? openOverlay : null">
-                                    />
+                                    @openInOverlay="message.queryResult.action !== 'Fine.Fine-no' ? openOverlay : null"
+                                />
                                 </media>
                             </div>
 
