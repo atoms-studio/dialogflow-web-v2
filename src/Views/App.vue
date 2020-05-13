@@ -128,7 +128,6 @@
                                 @openInOverlay="message.queryResult.action !== 'Fine.Fine-no' ? openOverlay : null"
                                 @click.native="message.queryResult.action === 'Fine.Fine-no' ? send({text: item.info.key}) : null"
                             />
-                            </card>
                         </Carousel>
 
                         <!-- RbmCarouselCard (https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#rbmcarouselcard) -->
@@ -170,7 +169,6 @@
                                 @openInOverlay="message.queryResult.action !== 'Fine.Fine-no' ? openOverlay : null"
                                 @click.native="message.queryResult.action === 'Fine.Fine-no' ? send({text: item.info.key}) : null"
                             />
-                            </listitem>
                         </List>
 
                         <!-- Image (https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#Image) -->
@@ -193,7 +191,6 @@
                                 :uri="media.contentUrl"
                                 @openInOverlay="message.queryResult.action !== 'Fine.Fine-no' ? openOverlay : null"
                             />
-                            </media>
                         </div>
 
                         <!-- TableCard (https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#tablecard) -->
@@ -254,7 +251,6 @@
                                     :image-title="item.image.accessibilityText"
                                     @openInOverlay="message.queryResult.action !== 'Fine.Fine-no' ? openOverlay : null"
                                 />
-                                </listitem>
                             </List>
 
                             <!-- Media responses (https://developers.google.com/actions/assistant/responses#media_responses) -->
