@@ -336,7 +336,12 @@
         </div>
 
         <!-- ChatInput is made for submitting queries and displaying suggestions -->
-        <ChatInput ref="input" :disabled="messages.length < 3" :messages="messages" @submit="send">
+        <ChatInput
+            v-if="lastMessage && !lastMessage.queryResult.uploadFile"
+            ref="input"
+            :disabled="messages.length < 3"
+            :messages="messages"
+            @submit="send">
             <!-- Suggestion chips
                 https://developers.google.com/actions/assistant/responses#suggestion_chips
                 https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#QuickReplies
