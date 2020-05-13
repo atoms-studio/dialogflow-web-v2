@@ -13,7 +13,7 @@
             class="box has-advanced-upload"
             @submit.prevent="onSubmit"
         >
-            <div class="box__input" onclick="document.getElementById('pdfFileInput').click()">
+            <div class="box__input" @click="uploadPdfClick">
                 <svg
                     class="box__icon"
                     xmlns="http://www.w3.org/2000/svg"
@@ -54,7 +54,7 @@
   z-index: 1000;
   background: white;
   width: 100%;
-  height: 100%;
+  height: 97%;
   top: 0px;
 }
 
@@ -155,6 +155,9 @@ export default {
         }
     },
     methods: {
+        uploadPdfClick(){
+            if (this.$refs.filePdf) this.$refs.filePdf.click()
+        },
         onSelect(){
             const allowedTypes = ['application/pdf']
             const file = this.$refs.filePdf.files[0]
@@ -179,7 +182,7 @@ export default {
             formData.append('file', this.file)
             let response
             try {
-                response = await axios.post('http://localhost:80/upload', formData)
+                response = await axios.post(`${this.config.endpoint}/upload`, formData)
                 if (response.status === 200){
                     this.stateUpload = 'uploaded'
                     this.uploadedFileUrl = response.data.data
