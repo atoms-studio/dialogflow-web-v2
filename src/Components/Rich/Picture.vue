@@ -1,5 +1,5 @@
 <template>
-    <img class="picture" :src="uri" :alt="title">
+    <img class="picture overlay-image" :src="uri" :alt="title" @click.stop="openOverlay">
 </template>
 
 <style lang="sass" scoped>
@@ -24,6 +24,14 @@ export default {
         title: {
             type: String,
             default: null
+        }
+    },
+    methods: {
+        openOverlay(event){
+            const condition = true
+            if (condition){
+                this.$emit('openInOverlay', event.target)
+            }
         }
     }
 }

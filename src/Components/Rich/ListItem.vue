@@ -1,6 +1,11 @@
 <template>
     <li class="list-item" tabindex="0">
-        <img v-if="imageUri" class="list-item-image" :src="imageUri" :alt="imageTitle">
+        <img
+            v-if="imageUri"
+            class="list-item-image overlay-image"
+            :src="imageUri"
+            :alt="imageTitle"
+            @click.stop="openOverlay">
         <a
             class="list-item-content"
             target="_blank"
@@ -90,7 +95,14 @@ export default {
             type: String,
             default: null
         }
+    },
+    methods: {
+        openOverlay(event){
+            const condition = true
+            if (condition){
+                this.$emit('openInOverlay', event.target)
+            }
+        }
     }
-
 }
 </script>
