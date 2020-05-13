@@ -269,7 +269,6 @@
                                     :uri="media.contentUrl"
                                     @openInOverlay="message.queryResult.action !== 'Fine.Fine-no' ? openOverlay : null"
                                 />
-                                </media>
                             </div>
 
                             <!-- Table cards (https://developers.google.com/actions/assistant/responses#table_cards) -->
@@ -308,7 +307,6 @@
                                     @openInOverlay="message.queryResult.action !== 'Fine.Fine-no' ? openOverlay : null"
                                     @click.native="message.queryResult.action === 'Fine.Fine-no' ? send({text: item.optionInfo.key}) : null"
                                 />
-                                </listitem>
                             </List>
 
                             <!-- Carousel (https://developers.google.com/actions/assistant/responses#carousel) -->
@@ -323,7 +321,6 @@
                                     @openInOverlay="message.queryResult.action !== 'Fine.Fine-no' ? openOverlay : null"
                                     @click.native="message.queryResult.action === 'Fine.Fine-no' ? send({text: item.optionInfo.key}) : null"
                                 />
-                                </card>
                             </Carousel>
                         </RichComponent>
                     </section>
