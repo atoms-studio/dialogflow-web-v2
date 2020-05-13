@@ -5,7 +5,7 @@
             class="table-card-image overlay-image"
             :src="imageUri"
             :alt="imageTitle"
-            @click.stop="$emit('openInOverlay', $event.target)">
+            @click.stop="openOverlay">
         <div class="table-card-content">
             <div v-if="title" class="table-card-title" v-html="marked(title)" />
             <div v-if="subtitle" class="table-card-subtitle" v-html="marked(subtitle)" />
@@ -117,7 +117,14 @@ export default {
             type: Array,
             default: null
         }
+    },
+    methods: {
+        openOverlay(event){
+            const condition = true
+            if (condition){
+                this.$emit('openInOverlay', event.target)
+            }
+        }
     }
-
 }
 </script>

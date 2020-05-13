@@ -1,6 +1,6 @@
 <template>
     <transition name="fade" @after-leave="$emit('closeAnimationEnded')">
-        <div v-show="show" class="overlay" @click.stop="$emit('closeOverlay')">
+        <div v-show="show" class="overlay" @click.stop="closeOverlay">
             <span class="close-icon">x</span>
             <img v-if="img" class="image" :src="img.src" :alt="img.alt">
         </div>
@@ -18,8 +18,19 @@ export default {
             type: Object,
             default: null
         }
-    }
-}
+    },
+    mounted(){
+        document.addEventListener('keyup', e => {
+            if (e.keyCode === 27){
+                this.closeOverlay()
+            }
+        })
+    },
+    methods: {
+        closeOverlay(){
+            this.$emit('closeOverlay')
+        }
+    }}
 </script>
 
 <style lang="scss" scoped>

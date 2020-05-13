@@ -5,7 +5,7 @@
             class="media-image overlay-image"
             :src="iconUri"
             :alt="iconTitle"
-            @click.stop="$emit('openInOverlay', $event.target)">
+            @click.stop="openOverlay">
         <div class="media-content">
             <div v-if="name" class="media-title" v-html="marked(name)" />
             <div v-if="description" class="media-subtitle" v-html="marked(description)" />
@@ -78,7 +78,14 @@ export default {
             type: String,
             default: null
         }
+    },
+    methods: {
+        openOverlay(event){
+            const condition = true
+            if (condition){
+                this.$emit('openInOverlay', event.target)
+            }
+        }
     }
-
 }
 </script>

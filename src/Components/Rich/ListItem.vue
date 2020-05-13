@@ -5,7 +5,7 @@
             class="list-item-image overlay-image"
             :src="imageUri"
             :alt="imageTitle"
-            @click.stop="$emit('openInOverlay', $event.target)">
+            @click.stop="openOverlay">
         <a
             class="list-item-content"
             target="_blank"
@@ -95,7 +95,14 @@ export default {
             type: String,
             default: null
         }
+    },
+    methods: {
+        openOverlay(event){
+            const condition = true
+            if (condition){
+                this.$emit('openInOverlay', event.target)
+            }
+        }
     }
-
 }
 </script>
