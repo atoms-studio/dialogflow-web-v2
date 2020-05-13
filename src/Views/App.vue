@@ -69,7 +69,7 @@
                             :title="component.card.title"
                             :subtitle="component.card.subtitle"
                             :image-uri="component.card.imageUri"
-                            @openInOverlay="message.queryResult.action !== 'Fine.Fine-no' ? openOverlay : null">
+                            @openInOverlay="openInOverlay($event, message)">
                             <CardButton
                                 v-for="(button, button_id) in component.card.buttons"
                                 :key="button_id"
@@ -86,7 +86,7 @@
                             :image-uri="component.basicCard.image.imageUri"
                             :image-title="component.basicCard.image.accessibilityText"
                             :text="component.basicCard.formattedText"
-                            @openInOverlay="message.queryResult.action !== 'Fine.Fine-no' ? openOverlay : null">
+                            @openInOverlay="openInOverlay($event, message)">
                             <CardButton
                                 v-for="(button, button_id) in component.basicCard.buttons"
                                 :key="button_id"
@@ -101,7 +101,7 @@
                             :title="component.rbmStandaloneRichCard.cardContent.title"
                             :image-uri="component.rbmStandaloneRichCard.cardContent.media.fileUri"
                             :text="component.rbmStandaloneRichCard.cardContent.description"
-                            @openInOverlay="message.queryResult.action !== 'Fine.Fine-no' ? openOverlay : null">
+                            @openInOverlay="openInOverlay($event, message)">
                             <div v-for="(suggestion, suggestion_id) in component.rbmStandaloneRichCard.cardContent.suggestions" :key="suggestion_id">
                                 <CardButton
                                     v-if="suggestion.reply"
@@ -125,8 +125,8 @@
                                 :image-uri="item.image.imageUri"
                                 :image-title="item.image.accessibilityText"
                                 :text="item.description"
-                                @openInOverlay="message.queryResult.action !== 'Fine.Fine-no' ? openOverlay : null"
-                                @click.native="message.queryResult.action === 'Fine.Fine-no' ? send({text: item.info.key}) : null"
+                                @openInOverlay="openInOverlay($event, message)"
+                                @click.native="conditionalSend(message, {text: item.info.key})"
                             />
                         </Carousel>
 
@@ -138,7 +138,7 @@
                                 :title="card.title"
                                 :image-uri="card.media.fileUri"
                                 :text="card.description"
-                                @openInOverlay="message.queryResult.action !== 'Fine.Fine-no' ? openOverlay : null">
+                                @openInOverlay="openInOverlay($event, message)">
                                 <div v-for="(suggestion, suggestion_id) in card.suggestions" :key="suggestion_id">
                                     <CardButton
                                         v-if="suggestion.reply"
@@ -166,8 +166,8 @@
                                 :description="item.description"
                                 :image-uri="item.image.imageUri"
                                 :image-title="item.image.accessibilityText"
-                                @openInOverlay="message.queryResult.action !== 'Fine.Fine-no' ? openOverlay : null"
-                                @click.native="message.queryResult.action === 'Fine.Fine-no' ? send({text: item.info.key}) : null"
+                                @openInOverlay="openInOverlay($event, message)"
+                                @click.native="conditionalSend(message, {text: item.info.key})"
                             />
                         </List>
 
@@ -176,7 +176,7 @@
                             v-if="component.image"
                             :uri="component.image.imageUri"
                             :title="component.image.accessibilityText"
-                            @openInOverlay="message.queryResult.action !== 'Fine.Fine-no' ? openOverlay : null"
+                            @openInOverlay="openInOverlay($event, message)"
                         />
 
                         <!-- Media (https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#MediaContent) -->
@@ -189,7 +189,7 @@
                                 :icon-uri="media.icon ? media.icon.imageUri : media.largeImage.imageUri"
                                 :icon-title="media.icon ? media.icon.accessibilityText : media.largeImage.accessibilityText"
                                 :uri="media.contentUrl"
-                                @openInOverlay="message.queryResult.action !== 'Fine.Fine-no' ? openOverlay : null"
+                                @openInOverlay="openInOverlay($event, message)"
                             />
                         </div>
 
@@ -202,7 +202,7 @@
                             :image-title="component.tableCard.image.accessibilityText"
                             :header="component.tableCard.columnProperties"
                             :rows="component.tableCard.rows"
-                            @openInOverlay="message.queryResult.action !== 'Fine.Fine-no' ? openOverlay : null">
+                            @openInOverlay="openInOverlay($event, message)">
                             <CardButton
                                 v-for="(button, button_id) in component.tableCard.buttons"
                                 :key="button_id"
@@ -229,7 +229,7 @@
                                 :image-uri="component.basicCard.image.url"
                                 :image-title="component.basicCard.image.accessibilityText"
                                 :text="component.basicCard.formattedText"
-                                @openInOverlay="message.queryResult.action !== 'Fine.Fine-no' ? openOverlay : null">
+                                @openInOverlay="openInOverlay($event, message)">
                                 <CardButton
                                     v-for="(button, button_id) in component.basicCard.buttons"
                                     :key="button_id"
@@ -249,7 +249,7 @@
                                     :footer="item.footer"
                                     :image-uri="item.image.url"
                                     :image-title="item.image.accessibilityText"
-                                    @openInOverlay="message.queryResult.action !== 'Fine.Fine-no' ? openOverlay : null"
+                                    @openInOverlay="openInOverlay($event, message)"
                                 />
                             </List>
 
@@ -263,7 +263,7 @@
                                     :icon-uri="media.icon.url"
                                     :icon-title="media.icon.accessibilityText"
                                     :uri="media.contentUrl"
-                                    @openInOverlay="message.queryResult.action !== 'Fine.Fine-no' ? openOverlay : null"
+                                    @openInOverlay="openInOverlay($event, message)"
                                 />
                             </div>
 
@@ -276,7 +276,7 @@
                                 :image-title="component.tableCard.image.accessibilityText"
                                 :header="component.tableCard.columnProperties"
                                 :rows="component.tableCard.rows"
-                                @openInOverlay="message.queryResult.action !== 'Fine.Fine-no' ? openOverlay : null">
+                                @openInOverlay="openInOverlay($event, message)">
                                 <CardButton
                                     v-for="(button, button_id) in component.tableCard.buttons"
                                     :key="button_id"
@@ -300,8 +300,8 @@
                                     :description="item.description"
                                     :image-uri="item.image.url"
                                     :image-title="item.image.accessibilityText"
-                                    @openInOverlay="message.queryResult.action !== 'Fine.Fine-no' ? openOverlay : null"
-                                    @click.native="message.queryResult.action === 'Fine.Fine-no' ? send({text: item.optionInfo.key}) : null"
+                                    @openInOverlay="openInOverlay($event, message)"
+                                    @click.native="conditionalSend(message, {text: item.optionInfo.key})"
                                 />
                             </List>
 
@@ -314,8 +314,8 @@
                                     :image-uri="item.image.url"
                                     :image-title="item.image.accessibilityText"
                                     :text="item.description"
-                                    @openInOverlay="message.queryResult.action !== 'Fine.Fine-no' ? openOverlay : null"
-                                    @click.native="message.queryResult.action === 'Fine.Fine-no' ? send({text: item.optionInfo.key}) : null"
+                                    @openInOverlay="openInOverlay($event, message)"
+                                    @click.native="conditionalSend(message, {text: item.optionInfo.key})"
                                 />
                             </Carousel>
                         </RichComponent>
@@ -559,6 +559,9 @@ export default {
         uploaded(url){
             console.log('uploaded:', url)
             this.send({text: url})
+        },
+        conditionalSend(message, submission){
+            message.queryResult.action === 'Fine.Fine-no' ? send(submission) : null
         },
         send(submission){
             let request
