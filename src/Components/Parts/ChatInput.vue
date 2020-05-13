@@ -205,6 +205,8 @@ export default {
             const spaceForChatInput = appChatHeight - bubblesHeight
             // console.log(appChatHeight, bubblesHeight, chatInput)
             if (appChatHeight !== 0) this.inputFixed = chatInput < spaceForChatInput
+
+            this.$refs.chatInput.scrollIntoView()
         },
         listen(){
             if (this.should_listen) this.microphone = true

@@ -34,7 +34,7 @@
             <img
                 v-if="img"
                 class="image"
-                src="https://www.das.it/wp-content/uploads/2019/04/das_web_copertina.jpg"
+                :src="img.src"
                 :alt="img.alt"
                 style="
                 margin: 0px !important;
