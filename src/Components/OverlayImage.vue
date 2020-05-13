@@ -4,33 +4,44 @@
             v-show="show"
             class="overlay"
             style="
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 1000;
-    background-color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: zoom-out;
-"
-            @click.stop="closeOverlay">
+            margin: 0px !important;
+            padding: 0px !important;
+            position: fixed !important;
+            top: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            left: 0 !important;
+            z-index: 1000 !important;
+            background-color: white !important;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            cursor: zoom-out !important;"
+            @click.stop="closeOverlay"
+        >
             <span
                 class="close-icon"
-                style="  font-family: Google Sans, Roboto, sans-serif;
-  position: absolute;
-  top: 2.5vw;
-  right: 2.5vw;
-  cursor: pointer;">x</span>
+                style="
+                font-family: Google Sans, Roboto, sans-serif !important;
+                margin: 0px !important;
+                padding: 0px !important;
+                position: absolute !important;
+                top: 2.5vw !important;
+                right: 2.5vw !important;
+                cursor: pointer !important;"
+            >x</span
+            >
             <img
                 v-if="img"
                 class="image"
-                src="https://source.unsplash.com/user/riccardogiorato"
+                src="https://www.das.it/wp-content/uploads/2019/04/das_web_copertina.jpg"
                 :alt="img.alt"
-                style="  max-width: 100vw;
-  max-height: 100vh;">
+                style="
+                margin: 0px !important;
+                padding: 0px !important;
+                max-width: 100vw !important;
+                max-height: 100vh !important;"
+            >
         </div>
     </transition>
 </template>
@@ -58,15 +69,17 @@ export default {
         closeOverlay(){
             this.$emit('closeOverlay')
         }
-    }}
+    }
+}
 </script>
 
 <style lang="scss" scoped>
-
-.fade-enter-active, .fade-leave-active {
+.fade-enter-active,
+.fade-leave-active {
   transition: opacity 0.3s;
 }
-.fade-enter, .fade-leave-to {
+.fade-enter,
+.fade-leave-to {
   opacity: 0;
 }
 </style>
