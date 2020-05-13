@@ -191,8 +191,8 @@
                                 :icon-uri="media.icon ? media.icon.imageUri : media.largeImage.imageUri"
                                 :icon-title="media.icon ? media.icon.accessibilityText : media.largeImage.accessibilityText"
                                 :uri="media.contentUrl"
-                                @openInOverlay="message.queryResult.action !== 'Fine.Fine-no' ? openOverlay : null">
-                                />
+                                @openInOverlay="message.queryResult.action !== 'Fine.Fine-no' ? openOverlay : null"
+                            />
                             </media>
                         </div>
 
