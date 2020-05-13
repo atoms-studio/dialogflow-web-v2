@@ -125,9 +125,9 @@
                                 :image-uri="item.image.imageUri"
                                 :image-title="item.image.accessibilityText"
                                 :text="item.description"
-                                @openInOverlay="message.queryResult.action !== 'Fine.Fine-no' ? openOverlay : null">
+                                @openInOverlay="message.queryResult.action !== 'Fine.Fine-no' ? openOverlay : null"
                                 @click.native="message.queryResult.action === 'Fine.Fine-no' ? send({text: item.info.key}) : null"
-                                />
+                            />
                             </card>
                         </Carousel>
 
@@ -167,14 +167,19 @@
                                 :description="item.description"
                                 :image-uri="item.image.imageUri"
                                 :image-title="item.image.accessibilityText"
-                                @openInOverlay="message.queryResult.action !== 'Fine.Fine-no' ? openOverlay : null">
+                                @openInOverlay="message.queryResult.action !== 'Fine.Fine-no' ? openOverlay : null"
                                 @click.native="message.queryResult.action === 'Fine.Fine-no' ? send({text: item.info.key}) : null"
-                                />
+                            />
                             </listitem>
                         </List>
 
                         <!-- Image (https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#Image) -->
-                        @openInOverlay="message.queryResult.action !== 'Fine.Fine-no' ? openOverlay : null">
+                        <Picture
+                            v-if="component.image"
+                            :uri="component.image.imageUri"
+                            :title="component.image.accessibilityText"
+                            @openInOverlay="message.queryResult.action !== 'Fine.Fine-no' ? openOverlay : null"
+                        />
 
                         <!-- Media (https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#MediaContent) -->
                         <div v-if="component.mediaContent && component.mediaContent.mediaObjects">
@@ -300,9 +305,9 @@
                                     :description="item.description"
                                     :image-uri="item.image.url"
                                     :image-title="item.image.accessibilityText"
-                                    @openInOverlay="message.queryResult.action !== 'Fine.Fine-no' ? openOverlay : null">
+                                    @openInOverlay="message.queryResult.action !== 'Fine.Fine-no' ? openOverlay : null"
                                     @click.native="message.queryResult.action === 'Fine.Fine-no' ? send({text: item.optionInfo.key}) : null"
-                                    />
+                                />
                                 </listitem>
                             </List>
 
@@ -315,9 +320,9 @@
                                     :image-uri="item.image.url"
                                     :image-title="item.image.accessibilityText"
                                     :text="item.description"
-                                    @openInOverlay="message.queryResult.action !== 'Fine.Fine-no' ? openOverlay : null">
+                                    @openInOverlay="message.queryResult.action !== 'Fine.Fine-no' ? openOverlay : null"
                                     @click.native="message.queryResult.action === 'Fine.Fine-no' ? send({text: item.optionInfo.key}) : null"
-                                    />
+                                />
                                 </card>
                             </Carousel>
                         </RichComponent>
