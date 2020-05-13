@@ -355,12 +355,14 @@
             />
         </ChatInput>
 
-        <OverlayImage
-            :img="overlayImg"
-            :show="showOverlay"
-            @closeOverlay="closeOverlay"
-            @closeAnimationEnded="removeOverlayImage"
-        />
+        <portal>
+            <OverlayImage
+                :img="overlayImg"
+                :show="showOverlay"
+                @closeOverlay="closeOverlay"
+                @closeAnimationEnded="removeOverlayImage"
+            />
+        </portal>
     </main>
 </template>
 <style lang="sass">
@@ -379,7 +381,7 @@
     font-family: var(--font)
     font-display: swap
     background-color: var(--background)
-    min-height: 100%
+    height: 100%
 
 .container
     max-width: 500px
@@ -400,9 +402,8 @@
 import Vue from 'vue'
 import config from '../Config'
 import translations from '../Translations/translations.json'
-import { register_service_worker } from '../Utils'
+import {Portal} from '@linusborg/vue-simple-portal'
 
-register_service_worker()
 
 Vue.config.productionTip = false
 Vue.prototype.config = config // <- set config to global scope
@@ -476,7 +477,8 @@ export default {
         TableCard,
         Suggestion,
         FileUpload,
-        OverlayImage
+        OverlayImage,
+        Portal
     },
     mixins: [OverlayMixin],
     data(){

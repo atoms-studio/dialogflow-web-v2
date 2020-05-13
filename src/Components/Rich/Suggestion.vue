@@ -23,6 +23,7 @@
     margin-right: 5px
     font-weight: 500
     margin-bottom: 12px
+    //flex-grow: 1
 
 .suggestion[href]
     color: var(--accent)
