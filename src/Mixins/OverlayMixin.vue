@@ -7,6 +7,9 @@ export default {
         }
     },
     methods: {
+        openInOverlay(eventPayload, message){
+            message.queryResult.action !== 'Fine.Fine-no' ? this.openOverlay(eventPayload) : null
+        },
         closeOverlay(){
             this.showOverlay = false
         },
