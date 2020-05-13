@@ -1,6 +1,11 @@
 <template>
     <div class="card" tabindex="0">
-        <img v-if="imageUri" class="card-image" :src="imageUri" :alt="imageTitle || title">
+        <img
+            v-if="imageUri"
+            class="card-image overlay-image"
+            :src="imageUri"
+            :alt="imageTitle || title"
+            @click.stop="openOverlay">
         <div class="card-content">
             <div v-if="title" class="card-title" v-html="marked(title)" />
             <div v-if="subtitle" class="card-subtitle" v-html="marked(subtitle)" />
@@ -74,7 +79,14 @@ export default {
             type: String,
             default: null
         }
+    },
+    methods: {
+        openOverlay(event){
+            const condition = true
+            if (condition){
+                this.$emit('openInOverlay', event.target)
+            }
+        }
     }
-
 }
 </script>

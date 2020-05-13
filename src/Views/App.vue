@@ -68,7 +68,8 @@
                             v-if="component.card"
                             :title="component.card.title"
                             :subtitle="component.card.subtitle"
-                            :image-uri="component.card.imageUri">
+                            :image-uri="component.card.imageUri"
+                            @openInOverlay="openOverlay">
                             <CardButton
                                 v-for="(button, button_id) in component.card.buttons"
                                 :key="button_id"
@@ -84,7 +85,8 @@
                             :subtitle="component.basicCard.subtitle"
                             :image-uri="component.basicCard.image.imageUri"
                             :image-title="component.basicCard.image.accessibilityText"
-                            :text="component.basicCard.formattedText">
+                            :text="component.basicCard.formattedText"
+                            @openInOverlay="openOverlay">
                             <CardButton
                                 v-for="(button, button_id) in component.basicCard.buttons"
                                 :key="button_id"
@@ -98,7 +100,8 @@
                             v-if="component.rbmStandaloneRichCard"
                             :title="component.rbmStandaloneRichCard.cardContent.title"
                             :image-uri="component.rbmStandaloneRichCard.cardContent.media.fileUri"
-                            :text="component.rbmStandaloneRichCard.cardContent.description">
+                            :text="component.rbmStandaloneRichCard.cardContent.description"
+                            @openInOverlay="openOverlay">
                             <div v-for="(suggestion, suggestion_id) in component.rbmStandaloneRichCard.cardContent.suggestions" :key="suggestion_id">
                                 <CardButton
                                     v-if="suggestion.reply"
@@ -122,6 +125,7 @@
                                 :image-uri="item.image.imageUri"
                                 :image-title="item.image.accessibilityText"
                                 :text="item.description"
+                                @openInOverlay="openOverlay"
                                 @click.native="send({text: item.info.key})"
                             />
                         </Carousel>
@@ -133,7 +137,8 @@
                                 :key="card_id"
                                 :title="card.title"
                                 :image-uri="card.media.fileUri"
-                                :text="card.description">
+                                :text="card.description"
+                                @openInOverlay="openOverlay">
                                 <div v-for="(suggestion, suggestion_id) in card.suggestions" :key="suggestion_id">
                                     <CardButton
                                         v-if="suggestion.reply"
@@ -161,12 +166,13 @@
                                 :description="item.description"
                                 :image-uri="item.image.imageUri"
                                 :image-title="item.image.accessibilityText"
+                                @openInOverlay="openOverlay"
                                 @click.native="send({text: item.info.key})"
                             />
                         </List>
 
                         <!-- Image (https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#Image) -->
-                        <Picture v-if="component.image" :uri="component.image.imageUri" :title="component.image.accessibilityText" />
+                        <Picture v-if="component.image" :uri="component.image.imageUri" :title="component.image.accessibilityText" @openInOverlay="openOverlay" />
 
                         <!-- Media (https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#MediaContent) -->
                         <div v-if="component.mediaContent && component.mediaContent.mediaObjects">
@@ -178,6 +184,7 @@
                                 :icon-uri="media.icon ? media.icon.imageUri : media.largeImage.imageUri"
                                 :icon-title="media.icon ? media.icon.accessibilityText : media.largeImage.accessibilityText"
                                 :uri="media.contentUrl"
+                                @openInOverlay="openOverlay"
                             />
                         </div>
 
@@ -189,7 +196,8 @@
                             :image-uri="component.tableCard.image.imageUri"
                             :image-title="component.tableCard.image.accessibilityText"
                             :header="component.tableCard.columnProperties"
-                            :rows="component.tableCard.rows">
+                            :rows="component.tableCard.rows"
+                            @openInOverlay="openOverlay">
                             <CardButton
                                 v-for="(button, button_id) in component.tableCard.buttons"
                                 :key="button_id"
@@ -215,7 +223,8 @@
                                 :subtitle="component.basicCard.subtitle"
                                 :image-uri="component.basicCard.image.url"
                                 :image-title="component.basicCard.image.accessibilityText"
-                                :text="component.basicCard.formattedText">
+                                :text="component.basicCard.formattedText"
+                                @openInOverlay="openOverlay">
                                 <CardButton
                                     v-for="(button, button_id) in component.basicCard.buttons"
                                     :key="button_id"
@@ -235,6 +244,7 @@
                                     :footer="item.footer"
                                     :image-uri="item.image.url"
                                     :image-title="item.image.accessibilityText"
+                                    @openInOverlay="openOverlay"
                                 />
                             </List>
 
@@ -248,6 +258,7 @@
                                     :icon-uri="media.icon.url"
                                     :icon-title="media.icon.accessibilityText"
                                     :uri="media.contentUrl"
+                                    @openInOverlay="openOverlay"
                                 />
                             </div>
 
@@ -259,7 +270,8 @@
                                 :image-uri="component.tableCard.image.url"
                                 :image-title="component.tableCard.image.accessibilityText"
                                 :header="component.tableCard.columnProperties"
-                                :rows="component.tableCard.rows">
+                                :rows="component.tableCard.rows"
+                                @openInOverlay="openOverlay">
                                 <CardButton
                                     v-for="(button, button_id) in component.tableCard.buttons"
                                     :key="button_id"
@@ -283,6 +295,7 @@
                                     :description="item.description"
                                     :image-uri="item.image.url"
                                     :image-title="item.image.accessibilityText"
+                                    @openInOverlay="openOverlay"
                                     @click.native="send({text: item.optionInfo.key})"
                                 />
                             </List>
@@ -296,6 +309,7 @@
                                     :image-uri="item.image.url"
                                     :image-title="item.image.accessibilityText"
                                     :text="item.description"
+                                    @openInOverlay="openOverlay"
                                     @click.native="send({text: item.optionInfo.key})"
                                 />
                             </Carousel>
@@ -340,6 +354,13 @@
                 :uri="suggestions.link_suggestion.uri || suggestions.link_suggestion.url"
             />
         </ChatInput>
+
+        <OverlayImage
+            :img="overlayImg"
+            :show="showOverlay"
+            @closeOverlay="closeOverlay"
+            @closeAnimationEnded="removeOverlayImage"
+        />
     </main>
 </template>
 
@@ -369,6 +390,9 @@ body
     margin-right: auto
     padding: 12px
     position: relative
+
+.overlay-image
+    cursor: zoom-in
 </style>
 
 <style lang="sass" scoped>
@@ -397,6 +421,8 @@ import Picture from '@/Components/Rich/Picture.vue'
 import Media from '@/Components/Rich/Media.vue'
 import TableCard from '@/Components/Rich/TableCard.vue'
 import Suggestion from '@/Components/Rich/Suggestion.vue'
+import OverlayImage from '@/Components/OverlayImage.vue'
+import OverlayMixin from '@/Mixins/OverlayMixin.vue'
 
 import * as uuidv1 from 'uuid/v1'
 
@@ -424,8 +450,10 @@ export default {
         Media,
         TableCard,
         Suggestion,
-        FileUpload
+        FileUpload,
+        OverlayImage
     },
+    mixins: [OverlayMixin],
     data(){
         return {
             app: null,
