@@ -60,6 +60,7 @@
     display: flex
     flex-direction: row
     flex-wrap: wrap
+    //justify-content: center
 
     &::-webkit-scrollbar
         display: none
@@ -129,7 +130,7 @@ export default {
             recognition: null,
             recorder: null,
             should_listen: false,
-            inputFixed: false
+            inputFixed: true
         }
     },
     computed: {
@@ -192,18 +193,20 @@ export default {
         }
     },
     mounted(){
-        this.chatInputPosition()
+        setTimeout(self => { self.chatInputPosition() }, 1000, this)
         window.addEventListener('resize', this.chatInputPosition)
     },
     methods: {
         chatInputPosition(){
-            const appChatHeight = document.getElementById('app').clientHeight
-            const bubblesHeight = document.getElementsByClassName('chat-container')[0].clientHeight
-            const chatInput = this.$refs.chatInput.clientHeight
+            const appChatHeight = this.$parent.$refs.app.clientHeight
+            const bubblesHeight = this.$parent.$refs.bubbles.clientHeight
+            const chatInput = this.$refs.chatInput.clientHeight - 50
 
             const spaceForChatInput = appChatHeight - bubblesHeight
             // console.log(appChatHeight, bubblesHeight, chatInput)
-            this.inputFixed = chatInput < spaceForChatInput
+            if (appChatHeight !== 0) this.inputFixed = chatInput < spaceForChatInput
+
+            this.$refs.chatInput.scrollIntoView()
         },
         listen(){
             if (this.should_listen) this.microphone = true

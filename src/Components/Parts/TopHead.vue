@@ -17,6 +17,7 @@
     padding: 12px
     position: fixed
     width: 100%
+    top: 0px
 
     @media screen and (max-width: 1000px)
         background-color: var(--background)

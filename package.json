@@ -6,7 +6,9 @@
     "serve": "vue-cli-service serve --open",
     "build": "vue-cli-service build",
     "devbuild": "vue-cli-service build --mode development && rm  -r ../das-dialogflow-gateway/dist/ && mv dist ../das-dialogflow-gateway/ ",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "buildwc": "vue-cli-service build --target wc --name chatbot-das src/Views/App.vue",
+    "buildwc:ftp": "vue-cli-service build --target wc --name chatbot-das src/Views/App.vue && rm  -r ../das-dialogflow-gateway/dist/ && mv dist ../das-dialogflow-gateway/ "
   },
   "dependencies": {
     "@types/marked": "^0.7.4",
@@ -21,6 +23,7 @@
     "vue": "^2.6.11"
   },
   "devDependencies": {
+    "@linusborg/vue-simple-portal": "^0.1.4",
     "@mishushakov/eslint-config": "^1.0.6",
     "@vue/cli-plugin-babel": "^4.2.3",
     "@vue/cli-plugin-eslint": "^4.2.3",
