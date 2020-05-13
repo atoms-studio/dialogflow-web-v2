@@ -26,7 +26,7 @@
 
                 <!-- Messages Table -->
                 <section v-else aria-live="polite">
-                    <div v-for="message in messages" id="message" :key="message.responseId">
+                    <div v-for="message in messages" id="message" :key="message.responseId" ref="message">
                         <!-- My message -->
                         <BubbleWrapper><UserBubble v-if="message.queryResult.queryText" :text="message.queryResult.queryText" me /></BubbleWrapper>
 
@@ -548,7 +548,7 @@ export default {
         /* This function is triggered, when request is started or finished */
         loading(){
             setTimeout(() => {
-                const app = document.querySelector('#app_chatbot_das') // <- We need to scroll down #app_chatbot_das, to prevent the whole page jumping to bottom, when using in iframe
+                const app = this.refs.app // <- We need to scroll down #app_chatbot_das, to prevent the whole page jumping to bottom, when using in iframe
                 if (app.querySelector('#message')){
                     const message = app.querySelectorAll('#message')[app.querySelectorAll('#message').length - 1].offsetTop - 68
                     window.scrollTo({top: message, behavior: 'smooth'})
