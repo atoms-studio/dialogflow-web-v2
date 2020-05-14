@@ -1,5 +1,5 @@
 <template>
-    <main id="app_chatbot_das" ref="app">
+    <main id="app_chatbot_das" ref="appChat">
         <!-- TopHead is the header with the information about the app -->
         <TopHead v-if="app && messages.length > 0" :app="app">
             <!-- Audio toggle (on the top right corner), used to toggle the audio output, default mode is defined in the settings -->
@@ -548,7 +548,7 @@ export default {
         /* This function is triggered, when request is started or finished */
         loading(){
             setTimeout(() => {
-                const app = this.refs.app // <- We need to scroll down #app_chatbot_das, to prevent the whole page jumping to bottom, when using in iframe
+                const app = this.$refs.appChat // <- We need to scroll down #app_chatbot_das, to prevent the whole page jumping to bottom, when using in iframe
                 if (app.querySelector('#message')){
                     const message = app.querySelectorAll('#message')[app.querySelectorAll('#message').length - 1].offsetTop - 68
                     window.scrollTo({top: message, behavior: 'smooth'})
