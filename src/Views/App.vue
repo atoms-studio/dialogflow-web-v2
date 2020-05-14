@@ -557,6 +557,7 @@ export default {
         }
     },
     created(){
+        this.newChatToday()
         /* If history is enabled, the messages are retrieved from sessionStorage */
         if (this.history() && sessionStorage.getItem('message_history') !== null){
             this.messages = JSON.parse(sessionStorage.getItem('message_history'))
@@ -589,6 +590,28 @@ export default {
         }
     },
     methods: {
+        newChatToday(){
+            const setCookie = (c_name, value, exdays) =>
+            {
+                const exdate = new Date()
+                exdate.setDate(exdate.getDate() + exdays)
+                const c_value = escape(value) + (exdays == null ? '' : `; expires=${exdate.toUTCString()}`)
+                document.cookie = `${c_name}=${c_value}`
+            }
+            const getCookie = name => {
+                const value = `; ${document.cookie}`
+                const parts = value.split(`; ${name}=`)
+                if (parts.length === 2) return parts.pop().split(';').shift()
+            }
+
+            const chatInThePast = getCookie('chatbot_das')
+            if (!chatInThePast){
+                sessionStorage.removeItem('message_history')
+                sessionStorage.removeItem('session')
+                sessionStorage.removeItem('agent')
+                setCookie('chatbot_das', 'today', 1)
+            }
+        },
         uploaded(url){
             console.log('uploaded:', url)
             this.send({text: url})
