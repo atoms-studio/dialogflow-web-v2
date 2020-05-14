@@ -200,7 +200,7 @@ export default {
         chatInputPosition(){
             const appChatHeight = this.$parent.$refs.app.clientHeight
             const bubblesHeight = this.$parent.$refs.bubbles.clientHeight
-            const chatInput = this.$refs.chatInput.clientHeight - 50
+            const chatInput = this.$refs.chatInput.clientHeight - 20
 
             const spaceForChatInput = appChatHeight - bubblesHeight
             // console.log(appChatHeight, bubblesHeight, chatInput)

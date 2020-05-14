@@ -30,7 +30,7 @@
                         <!-- My message -->
                         <BubbleWrapper><UserBubble v-if="message.queryResult.queryText" :text="message.queryResult.queryText" me /></BubbleWrapper>
 
-                        <RichComponent v-if="!message.queryResult.fulfillmentMessages && message.queryResult.knowledgeAnswers && message.queryResult.knowledgeAnswers.answers" class="knowledgeAnswer">
+                        <RichComponent v-if="message.queryResult.fulfillmentMessages.length === 0 && message.queryResult.knowledgeAnswers && message.queryResult.knowledgeAnswers.answers" class="knowledgeAnswer">
                             <Bubble
                                 :text="message.queryResult.knowledgeAnswers.answers[0].answer"
                             />
