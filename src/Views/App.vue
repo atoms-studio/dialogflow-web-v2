@@ -617,7 +617,10 @@ export default {
             this.send({text: url})
         },
         conditionalSend(message, submission){
-            message.queryResult.action === 'Fine.Fine-no' ? send(submission) : null
+            const contexts = message.queryResult.outputContexts
+            const index = contexts.findIndex(ctx => ctx.name.includes('feedback'))
+            if (index !== -1) return this.send(submission)
+            return null
         },
         send(submission){
             let request

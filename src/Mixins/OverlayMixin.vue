@@ -8,7 +8,10 @@ export default {
     },
     methods: {
         openInOverlay(eventPayload, message){
-            message.queryResult.action !== 'Fine.Fine-no' ? this.openOverlay(eventPayload) : null
+            const contexts = message.queryResult.outputContexts
+            const index = contexts.findIndex(ctx => ctx.name.includes('feedback'))
+            if (index === -1) return this.openOverlay(eventPayload)
+            return null
         },
         closeOverlay(){
             this.showOverlay = false
