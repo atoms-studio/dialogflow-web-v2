@@ -1,9 +1,5 @@
 <template>
     <div class="uploadPdfFields">
-        <div v-if="stateUpload === 'uploadedError'" class="uploadedText">
-            <p>{{message}}</p>
-        </div>
-
         <SpinnerLoader v-if="stateUpload === 'uploading'" />
 
         <form
@@ -13,6 +9,7 @@
             class="box has-advanced-upload"
             @submit.prevent="onSubmit"
         >
+            <button class="cancel_upload" @click="closeFileUpload">Annulla caricamento PDF</button>
             <div class="box__input" @click="uploadPdfClick">
                 <svg
                     class="box__icon"
@@ -64,6 +61,15 @@
     -webkit-transition: outline-offset .15s ease-in-out, background-color .15s linear;
     transition: outline-offset .15s ease-in-out, background-color .15s linear;
 }
+
+.cancel_upload{
+    margin-top:50px;
+    font-size: 1.25rem;
+    border: 1px solid #313131;
+    padding: 10px;
+    border-radius: 5px;
+}
+
 .box {
     font-size: 1.25rem;
     background-color: #ffffff;
@@ -155,6 +161,10 @@ export default {
         }
     },
     methods: {
+        closeFileUpload(e){
+            e.stopPropagation()
+            this.$emit('uploaded', 'annulla')
+        },
         uploadPdfClick(){
             if (this.$refs.filePdf) this.$refs.filePdf.click()
         },
@@ -181,20 +191,22 @@ export default {
             const formData = new FormData()
             formData.append('file', this.file)
             let response
-            try {
-                response = await axios.post(`${this.config.endpoint}/upload`, formData)
-                if (response.status === 200){
-                    this.stateUpload = 'uploaded'
-                    this.uploadedFileUrl = response.data.data
-                    this.message = response.data.message
+            if (this.file){
+                try {
+                    response = await axios.post(`${this.config.endpoint}/upload`, formData)
+                    if (response.status === 200){
+                        this.stateUpload = 'uploaded'
+                        this.uploadedFileUrl = response.data.data
+                        this.message = response.data.message
 
-                    this.$emit('uploaded', this.uploadedFileUrl)
-                } else {
-                    this.stateUpload = 'uploadedError'
-                    throw response.data.error
+                        this.$emit('uploaded', this.uploadedFileUrl)
+                    } else {
+                        this.stateUpload = 'uploadedError'
+                    // throw response.data.error
+                    }
+                } catch (err){
+                    this.message = err.response.data.error
                 }
-            } catch (err){
-                this.message = err.response.data.error
             }
         }
     }

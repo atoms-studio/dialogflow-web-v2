@@ -12,7 +12,7 @@
             </button>
         </TopHead>
 
-        <div v-if="lastMessage && lastMessage.queryResult.uploadFile" class="uploadFile">
+        <div v-if="uploadFile" class="uploadFile">
             <FileUpload @uploaded="uploaded" />
         </div>
 
@@ -504,7 +504,8 @@ export default {
             muted: this.config.muted,
             loading: false,
             error: null,
-            client: new Client(this.config.endpoint).connect()
+            client: new Client(this.config.endpoint).connect(),
+            uploadFile: false
         }
     },
     computed: {
@@ -547,6 +548,16 @@ export default {
         /* This function is triggered, when new messages arrive */
         messages(messages){
             if (this.history()) sessionStorage.setItem('message_history', JSON.stringify(messages)) // <- Save history if the feature is enabled
+
+            // condition to open the file uploader
+            if (this.messages[this.messages.length - 1].queryResult.uploadFile){
+                setTimeout(thisRef => { thisRef.uploadFile = true }, 2000, this)
+            } else {
+                this.uploadFile = false
+                setTimeout(thisRef => {
+                    thisRef.$refs.input.$refs.chatInput.scrollIntoView()
+                }, 2000, this)
+            }
         },
         /* This function is triggered, when request is started or finished */
         loading(){
@@ -616,7 +627,7 @@ export default {
             }
         },
         uploaded(url){
-            console.log('uploaded:', url)
+            // console.log('uploaded:', url)
             this.send({text: url})
         },
         conditionalSend(message, submission){
