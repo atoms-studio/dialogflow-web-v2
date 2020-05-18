@@ -1,6 +1,12 @@
 <template>
     <header class="app-head">
-        <img v-if="app.avatarUri" class="app-icon" :alt="app.displayName" :src="app.avatarUri">
+        <img
+            v-if="app.avatarUri"
+            class="app-icon"
+            :alt="app.displayName"
+            :src="app.avatarUri"
+            @click="scrollToTop"
+        >
         <img v-else class="app-icon" src="img/logo.jpg" :alt="app.displayName">
         <div class="app-info">
             <!-- <div class="app-name">{{app.displayName}}</div> -->
@@ -19,15 +25,14 @@
     width: 100%
     top: 0px
 
-    @media screen and (max-width: 1000px)
-        background-color: var(--background)
-
     .app-icon
         border-radius: 8px
         width: 40px
         height: 40px
         object-fit: cover
-        background-color: var(--image-background)
+        background-color: white
+        box-shadow: 1px 4px 8px rgba(0,0,0,0.4) !important
+        padding: 4px
 
     .app-info
         display: inline-block
@@ -61,6 +66,9 @@
     cursor: pointer
     color: var(--text)
     transition: padding .25s ease
+    border: 1px solid var(--border)
+    border-right: 0px
+
 
     &:hover
         padding-right: 20px
@@ -73,6 +81,11 @@ export default {
         app: {
             type: Object,
             default: null
+        }
+    },
+    methods: {
+        scrollToTop(){
+            this.$parent.$refs.appChat.scroll(0, 0)
         }
     }
 }

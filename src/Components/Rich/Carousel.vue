@@ -6,7 +6,7 @@
 .carousel
     display: flex
     flex-wrap: nowrap
-    overflow-x: scroll
+    overflow-x: auto
     overflow-y: hidden
     white-space: nowrap
     -webkit-overflow-scrolling: touch

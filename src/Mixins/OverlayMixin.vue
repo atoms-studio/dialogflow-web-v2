@@ -8,9 +8,9 @@ export default {
     },
     methods: {
         openInOverlay(eventPayload, message){
-            const contexts = message.queryResult.outputContexts
-            const index = contexts.findIndex(ctx => ctx.name.includes('feedback'))
-            if (index === -1) return this.openOverlay(eventPayload)
+            const intent = message.queryResult.intent.displayName
+            const isFeedback = intent === 'Fine - no' || intent === 'Feedback'
+            if (!isFeedback) return this.openOverlay(eventPayload)
             return null
         },
         closeOverlay(){

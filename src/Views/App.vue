@@ -393,6 +393,9 @@
     font-display: swap
     background-color: var(--background)
     height: 100%
+    overflow: hidden
+    overflow-y: auto
+    scroll-behavior: smooth
 
 .container
     max-width: 500px
@@ -617,9 +620,15 @@ export default {
             this.send({text: url})
         },
         conditionalSend(message, submission){
-            const contexts = message.queryResult.outputContexts
-            const index = contexts.findIndex(ctx => ctx.name.includes('feedback'))
-            if (index !== -1) return this.send(submission)
+            const intent = message.queryResult.intent.displayName
+            const isFeedback = intent === 'Fine - no' || intent === 'Feedback'
+
+            // limit chat response to 1 feedback
+            const actionMessageId = message.responseId
+            const indexMessage = this.messages.findIndex(mess => mess.responseId === actionMessageId)
+            const distanceMessages = this.messages.length - indexMessage
+
+            if (isFeedback && distanceMessages <= 1) return this.send(submission)
             return null
         },
         send(submission){
