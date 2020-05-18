@@ -28,8 +28,17 @@
                 <section v-else aria-live="polite">
                     <div v-for="message in messages" id="message" :key="message.responseId" ref="message">
                         <!-- My message -->
-                        <BubbleWrapper><UserBubble v-if="message.queryResult.queryText" :text="message.queryResult.queryText" me /></BubbleWrapper>
-
+                        <BubbleWrapper v-if="userBubbleURL(message)">
+                            <UserBubble me>
+                                <a target="_new" :href="userBubbleURL(message)">
+                                    <img style="height:15px" src="img/pdf.png" alt="pdf icon">
+                                    PDF Caricato
+                                </a>
+                            </UserBubble>
+                        </BubbleWrapper>
+                        <span v-else>
+                            <BubbleWrapper><UserBubble v-if="message.queryResult.queryText" :text="message.queryResult.queryText" me /></BubbleWrapper>
+                        </span>
                         <RichComponent v-if="message.queryResult.fulfillmentMessages.length === 0 && message.queryResult.knowledgeAnswers && message.queryResult.knowledgeAnswers.answers" class="knowledgeAnswer">
                             <Bubble
                                 :text="message.queryResult.knowledgeAnswers.answers[0].answer"
@@ -549,15 +558,10 @@ export default {
         messages(messages){
             if (this.history()) sessionStorage.setItem('message_history', JSON.stringify(messages)) // <- Save history if the feature is enabled
 
-            // condition to open the file uploader
-            if (this.messages[this.messages.length - 1].queryResult.uploadFile){
-                setTimeout(thisRef => { thisRef.uploadFile = true }, 2000, this)
-            } else {
-                this.uploadFile = false
-                setTimeout(thisRef => {
-                    thisRef.$refs.input.$refs.chatInput.scrollIntoView()
-                }, 2000, this)
-            }
+            this.uploadFile = false
+            setTimeout(thisRef => {
+                thisRef.$refs.input.$refs.chatInput.scrollIntoView()
+            }, 2000, this)
         },
         /* This function is triggered, when request is started or finished */
         loading(){
@@ -604,6 +608,18 @@ export default {
         }
     },
     methods: {
+        userBubbleURL(message){
+            try {
+                const jsonMess = JSON.parse(message.queryResult.queryText)
+                if (jsonMess && jsonMess.fileUploaded){
+                    const url = jsonMess.url
+                    return url
+                }
+                return undefined
+            } catch (err){
+                return undefined
+            }
+        },
         newChatToday(){
             const setCookie = (c_name, value, exdays) =>
             {
@@ -627,8 +643,11 @@ export default {
             }
         },
         uploaded(url){
-            // console.log('uploaded:', url)
-            this.send({text: url})
+            if (url === 'annulla'){
+                this.send({text: 'annulla'})
+            } else {
+                this.send({text: JSON.stringify({url, fileUploaded: true})})
+            }
         },
         conditionalSend(message, submission){
             const intent = message.queryResult.intent.displayName
@@ -645,8 +664,13 @@ export default {
         send(submission){
             let request
 
-            /* Text request */
-            if (submission.text){
+            /*
+             * condition to open the UploadFile dialog
+             * TODO add the real condition based on "allega" in response
+             */
+            if (submission.text === 'allega' && this.lastMessage){
+                this.uploadFile = true
+            } else if (submission.text){
                 request = {
                     session: this.session,
                     queryInput: {
@@ -657,7 +681,6 @@ export default {
                     }
                 }
             }
-
             /* Audio request */
             else if (submission.audio){
                 request = {

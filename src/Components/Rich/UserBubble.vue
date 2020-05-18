@@ -1,5 +1,8 @@
 <template>
-    <div class="bubble" tabindex="0" :class="{'me': me, 'loading': loading}">{{text}}</div>
+    <div class="bubble" tabindex="0" :class="{'me': me, 'loading': loading}">
+        {{text}}
+        <slot />
+    </div>
 </template>
 
 <style lang="sass" scoped>
