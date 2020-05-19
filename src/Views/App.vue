@@ -150,7 +150,7 @@
                                         :image-uri="item.image.imageUri"
                                         :image-title="item.image.accessibilityText"
                                         :text="item.description"
-                                        style-img="img {height: 150px!important; width: 150px !important;} "
+                                        style-img="img {height: 75px !important; width: 75px !important;} "
                                         @click.native="conditionalSend(message, {text: item.info.key})"
                                     />
                                 </span>

@@ -30,6 +30,8 @@
     border-top-left-radius: 10px
     background-color: var(--image-background)
     max-width: 300px
+    margin: 0 auto
+    display: block
 
 .card-content
     padding: 16px
