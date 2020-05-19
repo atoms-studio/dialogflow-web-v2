@@ -1,5 +1,5 @@
 <template>
-    <img class="picture overlay-image" :src="uri" :alt="title" @click.stop="openOverlay">
+    <img class="picture " :src="uri" :alt="title" @click.stop="openOverlay">
 </template>
 
 <style lang="sass" scoped>

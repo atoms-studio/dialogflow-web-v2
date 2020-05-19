@@ -2,7 +2,7 @@
     <div class="media">
         <img
             v-if="iconUri"
-            class="media-image overlay-image"
+            class="media-image "
             :src="iconUri"
             :alt="iconTitle"
             @click.stop="openOverlay">

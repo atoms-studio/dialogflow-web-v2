@@ -201,10 +201,12 @@ export default {
 
                         this.$emit('uploaded', { url: this.uploadedFileUrl, name: this.file.name, fileUploaded: true})
                     } else {
+                        alert('Il PDF è troppo grande caricane uno al massimo di 4MB')
                         this.stateUpload = 'uploadedError'
                     // throw response.data.error
                     }
                 } catch (err){
+                    alert('Il PDF è troppo grande caricane uno al massimo di 4MB')
                     this.message = err.response.data.error
                 }
             }

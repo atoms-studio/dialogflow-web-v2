@@ -2,7 +2,7 @@
     <div class="table-card">
         <img
             v-if="imageUri"
-            class="table-card-image overlay-image"
+            class="table-card-image "
             :src="imageUri"
             :alt="imageTitle"
             @click.stop="openOverlay">

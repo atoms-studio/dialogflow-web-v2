@@ -2,7 +2,7 @@
     <li class="list-item" tabindex="0">
         <img
             v-if="imageUri"
-            class="list-item-image overlay-image"
+            class="list-item-image "
             :src="imageUri"
             :alt="imageTitle"
             @click.stop="openOverlay">

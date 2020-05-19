@@ -82,8 +82,7 @@
                                 v-if="component.card"
                                 :title="component.card.title"
                                 :subtitle="component.card.subtitle"
-                                :image-uri="component.card.imageUri"
-                                @openInOverlay="openInOverlay($event, message)">
+                                :image-uri="component.card.imageUri">
                                 <CardButton
                                     v-for="(button, button_id) in component.card.buttons"
                                     :key="button_id"
@@ -99,8 +98,7 @@
                                 :subtitle="component.basicCard.subtitle"
                                 :image-uri="component.basicCard.image.imageUri"
                                 :image-title="component.basicCard.image.accessibilityText"
-                                :text="component.basicCard.formattedText"
-                                @openInOverlay="openInOverlay($event, message)">
+                                :text="component.basicCard.formattedText">
                                 <CardButton
                                     v-for="(button, button_id) in component.basicCard.buttons"
                                     :key="button_id"
@@ -114,8 +112,7 @@
                                 v-if="component.rbmStandaloneRichCard"
                                 :title="component.rbmStandaloneRichCard.cardContent.title"
                                 :image-uri="component.rbmStandaloneRichCard.cardContent.media.fileUri"
-                                :text="component.rbmStandaloneRichCard.cardContent.description"
-                                @openInOverlay="openInOverlay($event, message)">
+                                :text="component.rbmStandaloneRichCard.cardContent.description">
                                 <div v-for="(suggestion, suggestion_id) in component.rbmStandaloneRichCard.cardContent.suggestions" :key="suggestion_id">
                                     <CardButton
                                         v-if="suggestion.reply"
@@ -132,17 +129,33 @@
 
                             <!-- CarouselSelect (https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#CarouselSelect) -->
                             <Carousel v-if="component.carouselSelect">
-                                <Card
-                                    v-for="item in component.carouselSelect.items"
-                                    :key="item.info.key"
-                                    :title="item.title"
-                                    :image-uri="item.image.imageUri"
-                                    :image-title="item.image.accessibilityText"
-                                    :text="item.description"
-                                    @openInOverlay="openInOverlay($event, message)"
-                                    @click.native="conditionalSend(message, {text: item.info.key})"
-                                />
+                                <span v-if="!isFeedback(message)" style="cursor: zoom-in;">
+                                    <!-- Cards to be opened with Overlay -->
+                                    <Card
+                                        v-for="item in component.carouselSelect.items"
+                                        :key="item.info.key"
+                                        :title="item.title"
+                                        :image-uri="item.image.imageUri"
+                                        :image-title="item.image.accessibilityText"
+                                        :text="item.description"
+                                        @click.native="openInOverlay({alt: item.image.accessibilityText, src: item.image.imageUri})"
+                                    />
+                                </span>
+                                <span v-else>
+                                    <!-- Cards to be pressed as Feedback Buttons -->
+                                    <Card
+                                        v-for="item in component.carouselSelect.items"
+                                        :key="item.info.key"
+                                        :title="item.title"
+                                        :image-uri="item.image.imageUri"
+                                        :image-title="item.image.accessibilityText"
+                                        :text="item.description"
+                                        style-img="img {height: 150px!important; width: 150px !important;} "
+                                        @click.native="conditionalSend(message, {text: item.info.key})"
+                                    />
+                                </span>
                             </Carousel>
+
 
                             <!-- RbmCarouselCard (https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#rbmcarouselcard) -->
                             <Carousel v-if="component.rbmCarouselRichCard">
@@ -151,8 +164,7 @@
                                     :key="card_id"
                                     :title="card.title"
                                     :image-uri="card.media.fileUri"
-                                    :text="card.description"
-                                    @openInOverlay="openInOverlay($event, message)">
+                                    :text="card.description">
                                     <div v-for="(suggestion, suggestion_id) in card.suggestions" :key="suggestion_id">
                                         <CardButton
                                             v-if="suggestion.reply"
@@ -180,8 +192,6 @@
                                     :description="item.description"
                                     :image-uri="item.image.imageUri"
                                     :image-title="item.image.accessibilityText"
-                                    @openInOverlay="openInOverlay($event, message)"
-                                    @click.native="conditionalSend(message, {text: item.info.key})"
                                 />
                             </List>
 
@@ -190,7 +200,6 @@
                                 v-if="component.image"
                                 :uri="component.image.imageUri"
                                 :title="component.image.accessibilityText"
-                                @openInOverlay="openInOverlay($event, message)"
                             />
 
                             <!-- Media (https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#MediaContent) -->
@@ -203,7 +212,6 @@
                                     :icon-uri="media.icon ? media.icon.imageUri : media.largeImage.imageUri"
                                     :icon-title="media.icon ? media.icon.accessibilityText : media.largeImage.accessibilityText"
                                     :uri="media.contentUrl"
-                                    @openInOverlay="openInOverlay($event, message)"
                                 />
                             </div>
 
@@ -215,8 +223,7 @@
                                 :image-uri="component.tableCard.image.imageUri"
                                 :image-title="component.tableCard.image.accessibilityText"
                                 :header="component.tableCard.columnProperties"
-                                :rows="component.tableCard.rows"
-                                @openInOverlay="openInOverlay($event, message)">
+                                :rows="component.tableCard.rows">
                                 <CardButton
                                     v-for="(button, button_id) in component.tableCard.buttons"
                                     :key="button_id"
@@ -242,8 +249,7 @@
                                     :subtitle="component.basicCard.subtitle"
                                     :image-uri="component.basicCard.image.url"
                                     :image-title="component.basicCard.image.accessibilityText"
-                                    :text="component.basicCard.formattedText"
-                                    @openInOverlay="openInOverlay($event, message)">
+                                    :text="component.basicCard.formattedText">
                                     <CardButton
                                         v-for="(button, button_id) in component.basicCard.buttons"
                                         :key="button_id"
@@ -263,7 +269,6 @@
                                         :footer="item.footer"
                                         :image-uri="item.image.url"
                                         :image-title="item.image.accessibilityText"
-                                        @openInOverlay="openInOverlay($event, message)"
                                     />
                                 </List>
 
@@ -277,7 +282,6 @@
                                         :icon-uri="media.icon.url"
                                         :icon-title="media.icon.accessibilityText"
                                         :uri="media.contentUrl"
-                                        @openInOverlay="openInOverlay($event, message)"
                                     />
                                 </div>
 
@@ -289,8 +293,7 @@
                                     :image-uri="component.tableCard.image.url"
                                     :image-title="component.tableCard.image.accessibilityText"
                                     :header="component.tableCard.columnProperties"
-                                    :rows="component.tableCard.rows"
-                                    @openInOverlay="openInOverlay($event, message)">
+                                    :rows="component.tableCard.rows">
                                     <CardButton
                                         v-for="(button, button_id) in component.tableCard.buttons"
                                         :key="button_id"
@@ -314,7 +317,6 @@
                                         :description="item.description"
                                         :image-uri="item.image.url"
                                         :image-title="item.image.accessibilityText"
-                                        @openInOverlay="openInOverlay($event, message)"
                                         @click.native="conditionalSend(message, {text: item.optionInfo.key})"
                                     />
                                 </List>
@@ -328,7 +330,6 @@
                                         :image-uri="item.image.url"
                                         :image-title="item.image.accessibilityText"
                                         :text="item.description"
-                                        @openInOverlay="openInOverlay($event, message)"
                                         @click.native="conditionalSend(message, {text: item.optionInfo.key})"
                                     />
                                 </Carousel>
@@ -407,14 +408,11 @@
     scroll-behavior: smooth
 
 .container
-    max-width: 500px
+    max-width: 100%
     margin-left: auto
     margin-right: auto
     padding: 12px
     position: relative
-
-.overlay-image
-    cursor: zoom-in
 
 .chat-container
     padding-top: 80px
@@ -654,15 +652,20 @@ export default {
                 this.send({text: JSON.stringify(url)})
             }
         },
-        conditionalSend(message, submission){
+        isFeedback(message){
             if (message.queryResult.intent && message.queryResult.intent.displayName){
                 const intent = message.queryResult.intent.displayName || ''
                 const isFeedback = intent === 'Fine - no' || intent === 'Feedback'
-                // limit chat response to 1 feedback
+                return isFeedback
+            }
+            return false
+        },
+        conditionalSend(message, submission){
+            if (this.isFeedback(message)){
                 const actionMessageId = message.responseId
                 const indexMessage = this.messages.findIndex(mess => mess.responseId === actionMessageId)
                 const distanceMessages = this.messages.length - indexMessage
-                if (isFeedback && distanceMessages <= 1) return this.send(submission)
+                if (distanceMessages <= 1) return this.send(submission)
             }
             return null
         },
@@ -729,20 +732,26 @@ export default {
              */
 
             // else {
-            let text // <- init a text variable
+            let text = '' // <- init a text variable
 
             /* Dialogflow Text/SimpleResponses */
             for (const component in response.queryResult.fulfillmentMessages){
-                if (response.queryResult.fulfillmentMessages[component].text) text = response.queryResult.fulfillmentMessages[component].text.text[0]
-                if (response.queryResult.fulfillmentMessages[component].simpleResponses) text = response.queryResult.fulfillmentMessages[component].simpleResponses.simpleResponses[0].textToSpeech
-                if (response.queryResult.fulfillmentMessages[component].rbmText) text = response.queryResult.fulfillmentMessages[component].rbmText.text
+                text += ' '
+                if (response.queryResult.fulfillmentMessages[component].text) text += response.queryResult.fulfillmentMessages[component].text.text[0]
+                if (response.queryResult.fulfillmentMessages[component].simpleResponses) text += response.queryResult.fulfillmentMessages[component].simpleResponses.simpleResponses[0].textToSpeech
+                if (response.queryResult.fulfillmentMessages[component].rbmText) text += response.queryResult.fulfillmentMessages[component].rbmText.text
             }
 
             /* Actions on Google Simple response */
             if (response.queryResult.webhookPayload && response.queryResult.webhookPayload.google){
                 for (const component in response.queryResult.webhookPayload.google){
-                    if (response.queryResult.webhookPayload.google[component].simpleResponse) text = response.queryResult.webhookPayload.google[component].simpleResponse.textToSpeech
+                    text += ' '
+                    if (response.queryResult.webhookPayload.google[component].simpleResponse) text += response.queryResult.webhookPayload.google[component].simpleResponse.textToSpeech
                 }
+            }
+
+            if (response.queryResult.fulfillmentMessages.length === 0 && response.queryResult.knowledgeAnswers && response.queryResult.knowledgeAnswers.answers){
+                text = response.queryResult.knowledgeAnswers.answers[0].answer
             }
 
             const speech = new SpeechSynthesisUtterance(text)
