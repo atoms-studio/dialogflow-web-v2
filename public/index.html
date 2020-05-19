@@ -190,8 +190,8 @@
         const chatPopUp = document.querySelector('.chat-pop-up');
 
         toggleButton.addEventListener('click', _ => {
-            if (window.innerWidth < 400) {
-                // window.open("http://chatbot-das-dev.demomwd.it/front/");
+            if (window.innerWidth < 400 && false) {
+                window.open("http://chatbot-das-dev.demomwd.it/front/");
             } else {
                 toggleButton.classList.toggle('chat-is-open');
                 chatPopUp.classList.toggle('chat-display-on');

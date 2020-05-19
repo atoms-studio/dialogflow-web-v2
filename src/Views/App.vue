@@ -413,6 +413,7 @@
     margin-right: auto
     padding: 12px
     position: relative
+    margin-bottom: -20px
 
 .chat-container
     padding-top: 80px
