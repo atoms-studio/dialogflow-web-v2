@@ -28,6 +28,7 @@
                 position: absolute !important;
                 top: 2.5vw !important;
                 right: 2.5vw !important;
+                font-size: 36px;
                 cursor: pointer !important;"
             >x</span
             >
