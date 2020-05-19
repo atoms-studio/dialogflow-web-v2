@@ -28,11 +28,11 @@
                 <section v-else aria-live="polite">
                     <div v-for="message in messages" id="message" :key="message.responseId" ref="message">
                         <!-- My message -->
-                        <BubbleWrapper v-if="userBubbleURL(message)">
+                        <BubbleWrapper v-if="userMessagePDF(message)">
                             <UserBubble me>
-                                <a target="_new" :href="userBubbleURL(message)">
+                                <a target="_new" :href="userMessagePDF(message)[0]">
                                     <img style="height:15px" src="img/pdf.png" alt="pdf icon">
-                                    PDF Caricato
+                                    {{userMessagePDF(message)[1]}}
                                 </a>
                             </UserBubble>
                         </BubbleWrapper>
@@ -608,12 +608,17 @@ export default {
         }
     },
     methods: {
-        userBubbleURL(message){
+        capitalize(s){
+            if (typeof s !== 'string') return ''
+            return s.charAt(0).toUpperCase() + s.slice(1)
+        },
+        userMessagePDF(message){
             try {
                 const jsonMess = JSON.parse(message.queryResult.queryText)
                 if (jsonMess && jsonMess.fileUploaded){
                     const url = jsonMess.url
-                    return url
+                    const name = `${this.capitalize(jsonMess.name || 'file.pdf')}`
+                    return [url, name]
                 }
                 return undefined
             } catch (err){
@@ -646,19 +651,19 @@ export default {
             if (url === 'annulla'){
                 this.send({text: 'annulla'})
             } else {
-                this.send({text: JSON.stringify({url, fileUploaded: true})})
+                this.send({text: JSON.stringify(url)})
             }
         },
         conditionalSend(message, submission){
-            const intent = message.queryResult.intent.displayName
-            const isFeedback = intent === 'Fine - no' || intent === 'Feedback'
-
-            // limit chat response to 1 feedback
-            const actionMessageId = message.responseId
-            const indexMessage = this.messages.findIndex(mess => mess.responseId === actionMessageId)
-            const distanceMessages = this.messages.length - indexMessage
-
-            if (isFeedback && distanceMessages <= 1) return this.send(submission)
+            if (message.queryResult.intent && message.queryResult.intent.displayName){
+                const intent = message.queryResult.intent.displayName || ''
+                const isFeedback = intent === 'Fine - no' || intent === 'Feedback'
+                // limit chat response to 1 feedback
+                const actionMessageId = message.responseId
+                const indexMessage = this.messages.findIndex(mess => mess.responseId === actionMessageId)
+                const distanceMessages = this.messages.length - indexMessage
+                if (isFeedback && distanceMessages <= 1) return this.send(submission)
+            }
             return null
         },
         send(submission){

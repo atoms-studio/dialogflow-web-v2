@@ -8,10 +8,13 @@ export default {
     },
     methods: {
         openInOverlay(eventPayload, message){
-            const intent = message.queryResult.intent.displayName
-            const isFeedback = intent === 'Fine - no' || intent === 'Feedback'
-            if (!isFeedback) return this.openOverlay(eventPayload)
-            return null
+            if (message.queryResult.intent && message.queryResult.intent.displayName){
+                const intent = message.queryResult.intent.displayName || ''
+                const isFeedback = intent === 'Fine - no' || intent === 'Feedback'
+                if (isFeedback)
+                { return null }
+            }
+            return this.openOverlay(eventPayload)
         },
         closeOverlay(){
             this.showOverlay = false

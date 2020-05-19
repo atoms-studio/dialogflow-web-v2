@@ -199,7 +199,7 @@ export default {
                         this.uploadedFileUrl = response.data.data
                         this.message = response.data.message
 
-                        this.$emit('uploaded', this.uploadedFileUrl)
+                        this.$emit('uploaded', { url: this.uploadedFileUrl, name: this.file.name, fileUploaded: true})
                     } else {
                         this.stateUpload = 'uploadedError'
                     // throw response.data.error
