@@ -16,20 +16,8 @@
                     @keypress.enter="submit({text: query})"
                     @focus="microphone = false; should_listen = false">
 
-                <!-- Send message button (arrow button) -->
-                <button
-                    v-if="!microphone && query.length > 0 || !microphone_supported"
-                    :disabled="disabled"
-                    class="button"
-                    :title="(translations[lang()] && translations[lang()].sendTitle) || translations[config.fallback_lang].sendTitle"
-                    :aria-label="(translations[lang()] && translations[lang()].sendTitle) || translations[config.fallback_lang].sendTitle"
-                    @click="submit({text: query})">
-                    <i class="material-icons" aria-hidden="true">arrow_upward</i>
-                </button>
-
                 <!-- Microphone Button -->
                 <button
-                    v-else
                     :disabled="disabled"
                     class="button"
                     :aria-label="(translations[lang()] && translations[lang()].microphoneTitle) || translations[config.fallback_lang].microphoneTitle"
@@ -37,6 +25,17 @@
                     :class="{'mic_active': microphone}"
                     @click="microphone = !microphone">
                     <i class="material-icons" aria-hidden="true">mic</i>
+                </button>
+
+                <!-- Send message button (arrow button) -->
+                <button
+                    v-if="query.length > 0 || !microphone_supported"
+                    :disabled="disabled"
+                    class="button"
+                    :title="(translations[lang()] && translations[lang()].sendTitle) || translations[config.fallback_lang].sendTitle"
+                    :aria-label="(translations[lang()] && translations[lang()].sendTitle) || translations[config.fallback_lang].sendTitle"
+                    @click="submit({text: query})">
+                    <i class="material-icons" aria-hidden="true">arrow_upward</i>
                 </button>
             </div>
         </div>
@@ -151,9 +150,14 @@ export default {
                     this.recognition = new window.webkitSpeechRecognition() || new window.SpeechRecognition()
                     this.recognition.interimResults = true
                     this.recognition.lang = this.lang()
+
+                    let tempQuery = ''
+
                     this.recognition.onresult = event => {
                         for (let i = event.resultIndex; i < event.results.length; ++i){
-                            this.query = event.results[i][0].transcript // <- push results to the Text input
+                            this.query = this.query.slice(0, this.query.length - tempQuery.length - 1)
+                            tempQuery = event.results[i][0].transcript // <- push results to the Text input
+                            this.query += this.query ? ` ${tempQuery}` : tempQuery
                         }
                     }
 
