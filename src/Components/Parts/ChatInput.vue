@@ -160,7 +160,7 @@ export default {
                     this.recognition.onend = () => {
                         this.recognition.stop()
                         this.microphone = false
-                        this.submit({text: this.query}) // <- submit the result
+                        // this.submit({text: this.query}) // <- submit the result
                     }
 
                     this.recognition.onerror = () => this.microphone = false
