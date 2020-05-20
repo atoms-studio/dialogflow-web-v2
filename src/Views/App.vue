@@ -560,7 +560,7 @@ export default {
             this.uploadFile = false
             setTimeout(thisRef => {
                 thisRef.$refs.input.$refs.chatInput.scrollIntoView()
-            }, 2000, this)
+            }, 500, this)
         },
         /* This function is triggered, when request is started or finished */
         loading(){
