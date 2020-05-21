@@ -151,13 +151,15 @@ export default {
                     this.recognition.interimResults = true
                     this.recognition.lang = this.lang()
 
+                    const prevQuery = this.query
                     let tempQuery = ''
 
                     this.recognition.onresult = event => {
                         for (let i = event.resultIndex; i < event.results.length; ++i){
-                            this.query = this.query.slice(0, this.query.length - tempQuery.length - 1)
+                            this.query = prevQuery
                             tempQuery = event.results[i][0].transcript // <- push results to the Text input
-                            this.query += this.query ? ` ${tempQuery}` : tempQuery
+                            this.query += prevQuery.length > 0 ? ` ${tempQuery}` : tempQuery
+                            tempQuery = ''
                         }
                     }
 
