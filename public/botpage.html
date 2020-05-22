@@ -7,21 +7,21 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <script src="https://chatbot-das-dev.demomwd.it/front/chatbot-das.js"></script>
     <style>
-#app_chatbot_das {
-    --font: Google Sans, Roboto, sans-serif;
-    --background: white;
-    --element-background: #F1F3F4;
-    --component-background: white;
-    --image-background: transparent;
-    --text: #003169;
-    --text-subtitle: #70757A;
-    --text-secondary: #5F6368;
-    --border: #003169;
-    --accent: #4285F4;
-    --shadow: 0 2px 6px 2px rgba(60,64,67,0.15);
-    --left-bubble: url(img/bubble-left.b0cc3567.svg);
-    --right-bubble: url(img/bubble-right.f2e94057.svg);
-}
+        #app_chatbot_das {
+            --font: Google Sans, Roboto, sans-serif;
+            --background: white;
+            --element-background: #F1F3F4;
+            --component-background: white;
+            --image-background: transparent;
+            --text: #003169;
+            --text-subtitle: #70757A;
+            --text-secondary: #5F6368;
+            --border: #003169;
+            --accent: #4285F4;
+            --shadow: 0 2px 6px 2px rgba(60, 64, 67, 0.15);
+            --left-bubble: url(img/bubble-left.b0cc3567.svg);
+            --right-bubble: url(img/bubble-right.f2e94057.svg);
+        }
     </style>
 </head>
 
@@ -188,19 +188,25 @@
             opacity: 1;
             transform: translatey(0);
         }
+
+        @media (max-width: 450px) {
+            .chat-pop-up.chat-visible {
+                width: 100vw;
+                top: 0;
+                left: 0;
+                border-radius: 0px;
+                height: 87vh;
+            }
+        }
     </style>
     <script type="application/javascript">
         const toggleButton = document.querySelector('.toggle-chat');
         const chatPopUp = document.querySelector('.chat-pop-up');
 
         toggleButton.addEventListener('click', _ => {
-            if (window.innerWidth < 400) {
-                window.open("http://chatbot-das-dev.demomwd.it/front/");
-            } else {
                 toggleButton.classList.toggle('chat-is-open');
                 chatPopUp.classList.toggle('chat-display-on');
                 chatPopUp.classList.toggle('chat-visible');
-            }
         })
     </script>
 </body>

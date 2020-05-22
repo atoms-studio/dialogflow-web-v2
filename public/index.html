@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <title>appname</title>
@@ -25,6 +26,7 @@
     <meta name="twitter:description" content="appdesc">
     <meta name="twitter:image" content="<%= BASE_URL %>img/opengraph.png">
 </head>
+
 <body>
     <img class="background_img" src="https://i.imgur.com/JytLrOc.png" />
 
@@ -184,20 +186,27 @@
             opacity: 1;
             transform: translatey(0);
         }
+
+        @media (max-width: 450px) {
+            .chat-pop-up.chat-visible {
+                width: 100vw;
+                top: 0;
+                left: 0;
+                border-radius: 0px;
+                height: 87vh;
+            }
+        }
     </style>
     <script type="application/javascript">
         const toggleButton = document.querySelector('.toggle-chat');
         const chatPopUp = document.querySelector('.chat-pop-up');
 
         toggleButton.addEventListener('click', _ => {
-            if (window.innerWidth < 400 && false) {
-                window.open("http://chatbot-das-dev.demomwd.it/front/");
-            } else {
-                toggleButton.classList.toggle('chat-is-open');
-                chatPopUp.classList.toggle('chat-display-on');
-                chatPopUp.classList.toggle('chat-visible');
-            }
+            toggleButton.classList.toggle('chat-is-open');
+            chatPopUp.classList.toggle('chat-display-on');
+            chatPopUp.classList.toggle('chat-visible');
         })
     </script>
 </body>
+
 </html>
