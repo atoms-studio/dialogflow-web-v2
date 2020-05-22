@@ -625,11 +625,11 @@ export default {
             }
         },
         newChatToday(){
-            const setCookie = (c_name, value, exdays) =>
+            const setCookie = (c_name, value) =>
             {
-                const exdate = new Date()
-                exdate.setDate(exdate.getDate() + exdays)
-                const c_value = escape(value) + (exdays == null ? '' : `; expires=${exdate.toUTCString()}`)
+                const date = new Date()
+                date.setTime(date.getTime() + 10 * 60 * 1000)
+                const c_value = `${escape(value)}; expires=${date.toUTCString()}`
                 document.cookie = `${c_name}=${c_value}`
             }
             const getCookie = name => {
@@ -643,7 +643,7 @@ export default {
                 sessionStorage.removeItem('message_history')
                 sessionStorage.removeItem('session')
                 sessionStorage.removeItem('agent')
-                setCookie('chatbot_das', 'today', 1)
+                setCookie('chatbot_das', 'today')
             }
         },
         uploaded(url){
