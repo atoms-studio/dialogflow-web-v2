@@ -570,7 +570,8 @@ export default {
 
             this.uploadFile = false
             setTimeout(thisRef => {
-                thisRef.$refs.input.$refs.chatInput.scrollIntoView()
+                const app = thisRef.$refs.appChat
+                app.scrollTop = app.scrollHeight
             }, 500, this)
         },
         /* This function is triggered, when request is started or finished */
@@ -578,8 +579,7 @@ export default {
             setTimeout(() => {
                 const app = this.$refs.appChat // <- We need to scroll down #app_chatbot_das, to prevent the whole page jumping to bottom, when using in iframe
                 if (app.querySelector('#message')){
-                    const message = app.querySelectorAll('#message')[app.querySelectorAll('#message').length - 1].offsetTop - 68
-                    window.scrollTo({top: message, behavior: 'smooth'})
+                    app.scrollTop = app.scrollHeight
                 }
             }, 2) // <- wait for render (timeout) and then smoothly scroll #app_chatbot_das down to the last message
         }
