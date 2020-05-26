@@ -18,7 +18,7 @@
     border-top-left-radius: 0px
 
     &::before
-        content: var(--left-bubble)
+        content: url("https://chatbot-das-dev.demomwd.it/front/img/bubble-left.svg")
         position: absolute
         left: 0
         top: 0
@@ -35,7 +35,7 @@
             content: ''
 
         &::after
-            content: var(--right-bubble)
+            content: url("https://chatbot-das-dev.demomwd.it/front/img/bubble-right.svg")
             position: absolute
             right: 0
             top: 0
