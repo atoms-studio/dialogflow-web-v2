@@ -406,6 +406,7 @@
 
 .fixed
     position: fixed
+    bottom: -30px
 
 #app_chatbot_das
     margin: 0
@@ -427,7 +428,6 @@
     margin-bottom: -20px
 
 .chat-container
-    padding-top: 80px
     padding-bottom: 25px
 </style>
 
@@ -566,7 +566,13 @@ export default {
     watch: {
         /* This function is triggered, when new messages arrive */
         messages(messages){
-            if (this.history()) sessionStorage.setItem('message_history', JSON.stringify(messages)) // <- Save history if the feature is enabled
+            if (this.history()){ // <- Save history if the feature is enabled
+                try {
+                    sessionStorage.setItem('message_history', JSON.stringify(messages))
+                } catch (e){
+                    // console.log(`Quota exceeded!${messages.length}`)
+                }
+            }
 
             this.uploadFile = false
             setTimeout(thisRef => {

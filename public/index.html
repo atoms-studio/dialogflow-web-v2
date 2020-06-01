@@ -1,38 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>Chatbot Local Demo</title>
-</head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- https://chatbot-das-dev.demomwd.it/front/ -->
-    <link rel="stylesheet" type="text/css" href="./style.css">
+<!-- https://chatbot-das-dev.demomwd.it/front/ -->
+<link rel="stylesheet" type="text/css" href="./style.css">
 
-    <div class="chatbotdas_html">
-        <div class="chat-pop-up chat-display-on ">
-            <div id="app_chatbot_das"></div>
+<div class="chatbotdas_html">
+    <div class="chat-pop-up chat-display-on ">
+        <div class="chat_header_mobile">
+            <h1>Daisy</h1>
+            <img class="reduce_chat" width="24" height="24" src="https://chatbot-das-dev.demomwd.it/front/img/reduce_chat.svg" alt="">
         </div>
-
-        <button class="toggle-chat ">
-            <div class="content-chat">
-                <img class="close-chat" src="https://chatbot-das-dev.demomwd.it/front/img/close_chat.svg">
-
-                <span class="open-chat">
-                    <img width="33" height="40"
-                        src="https://chatbot-das-dev.demomwd.it/front/img/logo_bot.png"
-                        alt="">
-                </span>
-            </div>
-        </button>
+        <div id="app_chatbot_das"></div>
     </div>
 
-    <script type="application/javascript">
-        const toggleButton = document.querySelector('.toggle-chat');
-        const chatPopUp = document.querySelector('.chat-pop-up');
+    <button class="toggle-chat">
+        <div class="content-chat">
+            <img class="close-chat" src="https://chatbot-das-dev.demomwd.it/front/img/close_chat.svg">
 
-        toggleButton.addEventListener('click', _ => {
-            toggleButton.classList.toggle('chat-is-open');
-            chatPopUp.classList.toggle('chat-display-on');
-            chatPopUp.classList.toggle('chat-visible');
-        })
-    </script>
+            <span class="open-chat">
+                <img width="33" height="40" src="https://chatbot-das-dev.demomwd.it/front/img/logo_bot.png" alt="">
+            </span>
+        </div>
+    </button>
+</div>
+
+<script type="application/javascript" src="./startbot.js">
+</script>

@@ -21,7 +21,7 @@
 .app-head
     z-index: 666
     padding: 12px
-    position: fixed
+    position: sticky
     width: 100%
     top: 0px
 
@@ -55,10 +55,10 @@
 .audio-toggle
     @include reset
     display: flex
-    position: fixed
     top: 0
     right: 0
-    margin: 8.5px 0
+    float: right
+    margin-right: 13px
     z-index: 999
     padding: 8px
     background-color: var(--element-background)
