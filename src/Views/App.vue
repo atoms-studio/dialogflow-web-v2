@@ -694,7 +694,7 @@ export default {
              * condition to open the UploadFile dialog
              * TODO add the real condition based on "allega" in response
              */
-            if (submission.text === 'allega' && this.lastMessage){
+            if (submission.text === 'allega' && this.lastMessage && this.lastMessage.queryResult.fulfillmentText.includes('Se lo desideri puoi allegare')){
                 this.uploadFile = true
             } else if (submission.text){
                 request = {
