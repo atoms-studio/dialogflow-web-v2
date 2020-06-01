@@ -42,7 +42,7 @@
                         <BubbleWrapper v-if="userMessagePDF(message)">
                             <UserBubble me>
                                 <a target="_new" :href="userMessagePDF(message)[0]">
-                                    <img style="height:15px" src="img/pdf.png" alt="pdf icon">
+                                    <img style="height:15px" src="https://chatbot-das-dev.demomwd.it/front/img/pdf.png" alt="pdf icon">
                                     {{userMessagePDF(message)[1]}}
                                 </a>
                             </UserBubble>
