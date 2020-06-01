@@ -1,0 +1,29 @@
+<script src="https://unpkg.com/vue"></script>
+<script src="https://chatbot-das-dev.demomwd.it/front/chatbot-das.js"></script>
+
+<link rel="stylesheet" type="text/css" href="https://chatbot-das-dev.demomwd.it/front/style.css">
+
+<div class="chatbotdas_html">
+    <div class="chat-pop-up chat-display-on ">
+        <chatbot-das></chatbot-das>
+    </div>
+    <button class="toggle-chat ">
+        <div class="content-chat">
+            <img class="close-chat" src="https://chatbot-das-dev.demomwd.it/front/img/close_chat.svg">
+            <span class="open-chat">
+                <img width="33" height="40" src="https://chatbot-das-dev.demomwd.it/front/img/logo_bot.png" alt="">
+            </span>
+        </div>
+    </button>
+</div>
+
+<script type="application/javascript">
+    const toggleButton = document.querySelector('.toggle-chat');
+    const chatPopUp = document.querySelector('.chat-pop-up');
+
+    toggleButton.addEventListener('click', _ => {
+        toggleButton.classList.toggle('chat-is-open');
+        chatPopUp.classList.toggle('chat-display-on');
+        chatPopUp.classList.toggle('chat-visible');
+    })
+</script>

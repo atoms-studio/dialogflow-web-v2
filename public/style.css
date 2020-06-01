@@ -1,0 +1,125 @@
+#app_chatbot_das {
+  --font: Google Sans, Roboto, sans-serif;
+  --background: white;
+  --element-background: #F1F3F4;
+  --component-background: white;
+  --image-background: transparent;
+  --text: #003169;
+  --text-subtitle: #70757A;
+  --text-secondary: #5F6368;
+  --border: #003169;
+  --accent: #4285F4;
+  --shadow: 0 2px 6px 2px rgba(60, 64, 67, 0.15);
+}
+
+.chatbotdas_html {
+}
+
+.chat-pop-up {
+  background-size: contain;
+  border-radius: 11px;
+  bottom: 115px;
+  box-shadow: 0 3px 6px 0 rgba(75, 74, 75, 0.2);
+  opacity: 0;
+  right: 55px;
+  position: fixed;
+  transform: translatey(20px);
+  transition: opacity 0.25s ease, transform 0.25s ease-out;
+  width: 360px;
+  z-index: 100;
+  border: 2px solid #003169;
+  background-color: white;
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: 80vh;
+}
+
+.chat-pop-up--heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.chat-pop-up a span {
+  margin-right: 8px;
+}
+
+.toggle-chat {
+  background: #ffffff;
+  border: 2px solid #003169;
+  border-radius: 30px;
+  box-shadow: 0 3px 6px 0 rgba(75, 74, 75, 0.2);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  height: 60px;
+  bottom: 10px;
+  right: 60px;
+  padding: 10px;
+  transition: width 0.3s ease-in-out, background 0.2s ease;
+  outline: none;
+  width: 60px;
+  z-index: 100;
+}
+
+.toggle-chat.chat-is-open {
+  flex-direction: column;
+  width: 60px;
+}
+
+.open-chat {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #ffffff;
+  font-family: "Galano Grotesque Alt", "Open Sans", sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 27px;
+  opacity: 1;
+  transition: opacity 0.2s 0.2s ease-out;
+  margin: 0 auto;
+}
+
+.toggle-chat.chat-is-open .open-chat {
+  transition: none;
+  opacity: 0;
+}
+
+.toggle-chat .close-chat {
+  display: none;
+  margin: 0 auto;
+  opacity: 0;
+  transform: rotate(-40deg);
+}
+
+.toggle-chat.chat-is-open .close-chat {
+  display: block;
+  margin: 0 auto;
+  padding-top: 36px;
+  opacity: 1;
+  transform: rotate(0deg);
+  transition: opacity 0.2s ease-out, transform 0.4s ease-out;
+}
+
+.chat-display-on {
+  display: block !important;
+}
+
+.chat-visible {
+  opacity: 1;
+}
+
+@media (max-width: 450px) {
+  .chat-pop-up.chat-visible {
+    width: 100vw;
+    top: 0;
+    left: 0;
+    border-radius: 0px;
+    height: 85vh;
+    transform: translatey(0px);
+  }
+}

@@ -1,202 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
-    <title>appname</title>
-    <meta name="description" content="appdesc">
-    <link rel="canonical" href="appurl">
-
-    <!-- Mobile Stuff -->
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="msapplication-tap-highlight" content="no">
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-
-    <!-- OpenGraph -->
-    <meta property="og:title" content="appname">
-    <meta property="og:description" content="appdesc">
-    <meta property="og:image" content="<%= BASE_URL %>img/opengraph.png">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="appurl">
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="appname">
-    <meta name="twitter:description" content="appdesc">
-    <meta name="twitter:image" content="<%= BASE_URL %>img/opengraph.png">
+    <title>Chatbot Local Demo</title>
 </head>
 
-<body>
-    <img class="background_img" src="https://i.imgur.com/JytLrOc.png" />
+    <!-- https://chatbot-das-dev.demomwd.it/front/ -->
+    <link rel="stylesheet" type="text/css" href="./style.css">
 
-    <div class="chat-pop-up chat-display-on ">
-        <div id="app_chatbot_das"></div>
+    <div class="chatbotdas_html">
+        <div class="chat-pop-up chat-display-on ">
+            <div id="app_chatbot_das"></div>
+        </div>
+
+        <button class="toggle-chat ">
+            <div class="content-chat">
+                <img class="close-chat" src="https://chatbot-das-dev.demomwd.it/front/img/close_chat.svg">
+
+                <span class="open-chat">
+                    <img width="33" height="40"
+                        src="https://chatbot-das-dev.demomwd.it/front/img/logo_bot.png"
+                        alt="">
+                </span>
+            </div>
+        </button>
     </div>
 
-    <button class="toggle-chat ">
-        <div class="content-chat">
-            <svg class="close-chat" width="20px" height="20px" viewBox="0 0 20 20" version="1.1"
-                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                    <g id="chat_option_01" transform="translate(-266.000000, -579.000000)" fill="white"
-                        fill-rule="nonzero">
-                        <g id="button_chat-close_static" transform="translate(246.000000, 559.000000)">
-                            <g id="Group-4" transform="translate(20.000000, 20.000000)">
-                                <path
-                                    d="M6.18869049,10 L0.789348044,4.60065755 C-0.263116015,3.54819349 -0.263116015,1.8418121 0.789348044,0.789348044 C1.8418121,-0.263116015 3.54819349,-0.263116015 4.60065755,0.789348044 L10,6.18869049 L15.3993425,0.789348044 C16.4518065,-0.263116015 18.1581879,-0.263116015 19.210652,0.789348044 C20.263116,1.8418121 20.263116,3.54819349 19.210652,4.60065755 L13.8113095,10 L19.210652,15.3993425 C20.263116,16.4518065 20.263116,18.1581879 19.210652,19.210652 C18.1581879,20.263116 16.4518065,20.263116 15.3993425,19.210652 L10,13.8113095 L4.60065755,19.210652 C3.54819349,20.263116 1.8418121,20.263116 0.789348044,19.210652 C-0.263116015,18.1581879 -0.263116015,16.4518065 0.789348044,15.3993425 L6.18869049,10 Z"
-                                    id="Combined-Shape"></path>
-                            </g>
-                        </g>
-                    </g>
-                </g>
-            </svg>
-
-            <span class="open-chat">
-                <svg height="40px" viewBox="-21 -47 682.66669 682" width="40px" xmlns="http://www.w3.org/2000/svg"
-                    fill="white">
-                    <path
-                        d="m552.011719-1.332031h-464.023438c-48.515625 0-87.988281 39.464843-87.988281 87.988281v283.972656c0 48.414063 39.300781 87.816406 87.675781 87.988282v128.863281l185.191407-128.863281h279.144531c48.515625 0 87.988281-39.472657 87.988281-87.988282v-283.972656c0-48.523438-39.472656-87.988281-87.988281-87.988281zm50.488281 371.960937c0 27.835938-22.648438 50.488282-50.488281 50.488282h-290.910157l-135.925781 94.585937v-94.585937h-37.1875c-27.839843 0-50.488281-22.652344-50.488281-50.488282v-283.972656c0-27.84375 22.648438-50.488281 50.488281-50.488281h464.023438c27.839843 0 50.488281 22.644531 50.488281 50.488281zm0 0" />
-                    <path d="m171.292969 131.171875h297.414062v37.5h-297.414062zm0 0" />
-                    <path d="m171.292969 211.171875h297.414062v37.5h-297.414062zm0 0" />
-                    <path d="m171.292969 291.171875h297.414062v37.5h-297.414062zm0 0" /></svg>
-                Let's chat!
-            </span>
-        </div>
-    </button>
-    <style>
-        body {
-            margin: 0px;
-        }
-
-        .background_img {
-            width: 100vw;
-            height: 98vh;
-            filter: blur(10px);
-            overflow: hidden;
-            max-width: 100%;
-            max-height: 100%;
-        }
-
-        iframe {
-            border-radius: 11px;
-        }
-
-        .chat-pop-up {
-            background-size: contain;
-            border-radius: 11px;
-            bottom: 115px;
-            box-shadow: 0 3px 6px 0 rgba(75, 74, 75, 0.2);
-            opacity: 0;
-            right: 55px;
-            position: fixed;
-            transform: translatey(20px);
-            transition: opacity 0.25s ease, transform 0.25s ease-out;
-            width: 360px;
-            z-index: 100;
-            border: 2px solid #003169;
-            background-color: white;
-            overflow-x: hidden;
-            overflow-y: auto;
-            height: 80vh;
-        }
-
-        .chat-pop-up--heading {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-        }
-
-        .chat-pop-up a span {
-            margin-right: 8px;
-        }
-
-        .toggle-chat {
-            background: #003169;
-            border-radius: 30px;
-            border-style: none;
-            box-shadow: 0 3px 6px 0 rgba(75, 74, 75, 0.2);
-            cursor: pointer;
-            display: flex;
-            flex-direction: column-reverse;
-            align-items: center;
-            justify-content: center;
-            position: fixed;
-            height: 60px;
-            bottom: 30px;
-            right: 55px;
-            padding: 10px;
-            transition: width 0.3s ease-in-out, background 0.2s ease;
-            outline: none;
-            width: 180px;
-            z-index: 100;
-        }
-
-        .toggle-chat:hover,
-        .toggle-chat:active {
-            background: #003169;
-        }
-
-        .toggle-chat.chat-is-open {
-            flex-direction: column;
-            width: 60px;
-        }
-
-        .open-chat {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            color: #ffffff;
-            font-family: "Galano Grotesque Alt", "Open Sans", sans-serif;
-            font-size: 20px;
-            font-weight: 600;
-            line-height: 27px;
-            opacity: 1;
-            transition: opacity 0.2s 0.2s ease-out;
-            margin: 0 auto;
-            width: 144px;
-        }
-
-        .toggle-chat.chat-is-open .open-chat {
-            transition: none;
-            opacity: 0;
-        }
-
-        .toggle-chat .close-chat {
-            display: none;
-            margin: 0 auto;
-            opacity: 0;
-            transform: rotate(-40deg);
-        }
-
-        .toggle-chat.chat-is-open .close-chat {
-            display: block;
-            margin: 0 auto;
-            padding-top: 36px;
-            opacity: 1;
-            transform: rotate(0deg);
-            transition: opacity 0.2s ease-out, transform 0.4s ease-out;
-        }
-
-        .chat-display-on {
-            display: block !important;
-        }
-
-        .chat-visible {
-            opacity: 1;
-            transform: translatey(0);
-        }
-
-        @media (max-width: 450px) {
-            .chat-pop-up.chat-visible {
-                width: 100vw;
-                top: 0;
-                left: 0;
-                border-radius: 0px;
-                height: 87vh;
-            }
-        }
-    </style>
     <script type="application/javascript">
         const toggleButton = document.querySelector('.toggle-chat');
         const chatPopUp = document.querySelector('.chat-pop-up');
@@ -207,6 +36,3 @@
             chatPopUp.classList.toggle('chat-visible');
         })
     </script>
-</body>
-
-</html>
