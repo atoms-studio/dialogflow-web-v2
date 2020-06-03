@@ -403,10 +403,10 @@
 
 .relative
     position: relative
+    @media screen and (max-width: 450px)
 
 .fixed
     position: fixed
-    bottom: -30px
 
 #app_chatbot_das
     margin: 0
@@ -425,7 +425,6 @@
     margin-right: auto
     padding: 12px
     position: relative
-    margin-bottom: -20px
 
 .chat-container
     padding-bottom: 25px

@@ -133,7 +133,7 @@
     top: 0;
     left: 0;
     border-radius: 0px;
-    height: 100vh;
+    min-height: 100%;
     transform: translatey(0px);
   }
   .toggle-chat.chat-is-open{
