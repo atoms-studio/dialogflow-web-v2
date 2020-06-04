@@ -11,7 +11,7 @@
             right: 0 !important;
             bottom: 0 !important;
             left: 0 !important;
-            z-index: 1000 !important;
+            z-index: 1111111 !important;
             background-color: white !important;
             display: flex !important;
             justify-content: center !important;

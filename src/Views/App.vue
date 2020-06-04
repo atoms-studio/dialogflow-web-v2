@@ -109,7 +109,9 @@
                                 :subtitle="component.basicCard.subtitle"
                                 :image-uri="component.basicCard.image.imageUri"
                                 :image-title="component.basicCard.image.accessibilityText"
-                                :text="component.basicCard.formattedText">
+                                :text="component.basicCard.formattedText"
+                                @click.native="openInOverlay({alt: component.basicCard.image.accessibilityText, src: component.basicCard.image.imageUri})"
+                            >
                                 <CardButton
                                     v-for="(button, button_id) in component.basicCard.buttons"
                                     :key="button_id"
