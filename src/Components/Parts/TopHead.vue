@@ -7,7 +7,7 @@
             :src="app.avatarUri"
             @click="scrollToTop"
         >
-        <img v-else class="app-icon" src="img/logo.jpg" :alt="app.displayName">
+        <img v-else class="app-icon" src="https://chatbot-das-dev.demomwd.it/front/img/logo_bot.png" :alt="app.displayName">
         <div class="app-info">
             <!-- <div class="app-name">{{app.displayName}}</div> -->
         </div>
