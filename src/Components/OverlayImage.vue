@@ -1,7 +1,7 @@
 <template>
     <transition name="fade" @after-leave="$emit('closeAnimationEnded')">
         <div
-            v-show="show"
+            v-if="show"
             class="overlay"
             style="
             margin: 0px !important;
