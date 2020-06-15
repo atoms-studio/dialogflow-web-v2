@@ -1,7 +1,7 @@
 <template>
     <transition name="fade" @after-leave="$emit('closeAnimationEnded')">
         <div
-            v-show="show"
+            v-if="show"
             class="overlay"
             style="
             margin: 0px !important;
@@ -11,7 +11,7 @@
             right: 0 !important;
             bottom: 0 !important;
             left: 0 !important;
-            z-index: 1000 !important;
+            z-index: 1111111 !important;
             background-color: white !important;
             display: flex !important;
             justify-content: center !important;

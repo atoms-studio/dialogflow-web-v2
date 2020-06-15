@@ -7,7 +7,7 @@
             :src="app.avatarUri"
             @click="scrollToTop"
         >
-        <img v-else class="app-icon" src="img/logo.jpg" :alt="app.displayName">
+        <img v-else class="app-icon" src="https://chatbot-das-dev.demomwd.it/front/img/logo_bot.png" :alt="app.displayName">
         <div class="app-info">
             <!-- <div class="app-name">{{app.displayName}}</div> -->
         </div>
@@ -21,7 +21,7 @@
 .app-head
     z-index: 666
     padding: 12px
-    position: fixed
+    position: sticky
     width: 100%
     top: 0px
 
@@ -55,10 +55,10 @@
 .audio-toggle
     @include reset
     display: flex
-    position: fixed
     top: 0
     right: 0
-    margin: 8.5px 0
+    float: right
+    margin-right: 13px
     z-index: 999
     padding: 8px
     background-color: var(--element-background)

@@ -8,7 +8,18 @@
                 :title="muted ? (translations[lang()] && translations[lang()].unMuteTitle) || translations[config.fallback_lang].unMuteTitle : (translations[lang()] && translations[lang()].muteTitle) || translations[config.fallback_lang].muteTitle"
                 :aria-label="muted ? (translations[lang()] && translations[lang()].unMuteTitle) || translations[config.fallback_lang].unMuteTitle : (translations[lang()] && translations[lang()].muteTitle) || translations[config.fallback_lang].muteTitle"
                 @click="muted = !muted">
-                <i aria-hidden="true" class="material-icons">{{muted ? 'volume_off': 'volume_up'}}</i>
+                <svg
+                    v-if="muted"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" /> </svg>
+                <svg
+                    v-else
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 18 18"><path d="M12.79 9c0-1.3-.72-2.42-1.79-3v6c1.06-.58 1.79-1.7 1.79-3zM2 7v4h3l4 4V3L5 7H2zm9-5v1.5c2.32.74 4 2.93 4 5.5s-1.68 4.76-4 5.5V16c3.15-.78 5.5-3.6 5.5-7S14.15 2.78 11 2z" /></svg>
             </button>
         </TopHead>
 
@@ -31,7 +42,7 @@
                         <BubbleWrapper v-if="userMessagePDF(message)">
                             <UserBubble me>
                                 <a target="_new" :href="userMessagePDF(message)[0]">
-                                    <img style="height:15px" src="img/pdf.png" alt="pdf icon">
+                                    <img style="height:15px" src="https://chatbot-das-dev.demomwd.it/front/img/pdf.png" alt="pdf icon">
                                     {{userMessagePDF(message)[1]}}
                                 </a>
                             </UserBubble>
@@ -98,7 +109,9 @@
                                 :subtitle="component.basicCard.subtitle"
                                 :image-uri="component.basicCard.image.imageUri"
                                 :image-title="component.basicCard.image.accessibilityText"
-                                :text="component.basicCard.formattedText">
+                                :text="component.basicCard.formattedText"
+                                @click.native="openInOverlay({alt: component.basicCard.image.accessibilityText, src: component.basicCard.image.imageUri})"
+                            >
                                 <CardButton
                                     v-for="(button, button_id) in component.basicCard.buttons"
                                     :key="button_id"
@@ -392,6 +405,7 @@
 
 .relative
     position: relative
+    @media screen and (max-width: 450px)
 
 .fixed
     position: fixed
@@ -413,10 +427,8 @@
     margin-right: auto
     padding: 12px
     position: relative
-    margin-bottom: -20px
 
 .chat-container
-    padding-top: 80px
     padding-bottom: 25px
 </style>
 
@@ -555,11 +567,18 @@ export default {
     watch: {
         /* This function is triggered, when new messages arrive */
         messages(messages){
-            if (this.history()) sessionStorage.setItem('message_history', JSON.stringify(messages)) // <- Save history if the feature is enabled
+            if (this.history()){ // <- Save history if the feature is enabled
+                try {
+                    sessionStorage.setItem('message_history', JSON.stringify(messages))
+                } catch (e){
+                    // console.log(`Quota exceeded!${messages.length}`)
+                }
+            }
 
             this.uploadFile = false
             setTimeout(thisRef => {
-                thisRef.$refs.input.$refs.chatInput.scrollIntoView()
+                const app = thisRef.$refs.appChat
+                app.scrollTop = app.scrollHeight
             }, 500, this)
         },
         /* This function is triggered, when request is started or finished */
@@ -567,8 +586,7 @@ export default {
             setTimeout(() => {
                 const app = this.$refs.appChat // <- We need to scroll down #app_chatbot_das, to prevent the whole page jumping to bottom, when using in iframe
                 if (app.querySelector('#message')){
-                    const message = app.querySelectorAll('#message')[app.querySelectorAll('#message').length - 1].offsetTop - 68
-                    window.scrollTo({top: message, behavior: 'smooth'})
+                    app.scrollTop = app.scrollHeight
                 }
             }, 2) // <- wait for render (timeout) and then smoothly scroll #app_chatbot_das down to the last message
         }
@@ -625,11 +643,11 @@ export default {
             }
         },
         newChatToday(){
-            const setCookie = (c_name, value, exdays) =>
+            const setCookie = (c_name, value) =>
             {
-                const exdate = new Date()
-                exdate.setDate(exdate.getDate() + exdays)
-                const c_value = escape(value) + (exdays == null ? '' : `; expires=${exdate.toUTCString()}`)
+                const date = new Date()
+                date.setTime(date.getTime() + 10 * 60 * 1000)
+                const c_value = `${escape(value)}; expires=${date.toUTCString()}`
                 document.cookie = `${c_name}=${c_value}`
             }
             const getCookie = name => {
@@ -643,7 +661,7 @@ export default {
                 sessionStorage.removeItem('message_history')
                 sessionStorage.removeItem('session')
                 sessionStorage.removeItem('agent')
-                setCookie('chatbot_das', 'today', 1)
+                setCookie('chatbot_das', 'today')
             }
         },
         uploaded(url){
@@ -677,7 +695,8 @@ export default {
              * condition to open the UploadFile dialog
              * TODO add the real condition based on "allega" in response
              */
-            if (submission.text === 'allega' && this.lastMessage){
+            const submissionText = submission.text.toLowerCase()
+            if (submissionText === 'allega' && this.lastMessage && this.lastMessage.queryResult.fulfillmentText.includes('Se lo desideri puoi allegare')){
                 this.uploadFile = true
             } else if (submission.text){
                 request = {
