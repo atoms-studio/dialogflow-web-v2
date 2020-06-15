@@ -1,7 +1,7 @@
 <template>
     <a class="card-button" target="_blank" rel="noopener noreferrer" :href="uri">
         <i class="material-icons card-button-icon" aria-hidden="true">{{uri ? 'arrow_forward' : 'reply'}}</i>
-        <span class="card-button-title">{{title}}</span>
+        <span class="card-button-title" v-html="marked(title)" />
     </a>
 </template>
 
@@ -30,8 +30,11 @@
 </style>
 
 <script>
+import MarkdownMixin from '@/Mixins/Markdown.vue'
+
 export default {
     name: 'CardButton',
+    mixins: [MarkdownMixin],
     props: {
         uri: {
             type: String,
@@ -42,5 +45,6 @@ export default {
             default: null
         }
     }
+
 }
 </script>

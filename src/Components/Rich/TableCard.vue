@@ -1,17 +1,22 @@
 <template>
     <div class="table-card">
-        <img v-if="imageUri" class="table-card-image" :src="imageUri" :alt="imageTitle">
+        <img
+            v-if="imageUri"
+            class="table-card-image "
+            :src="imageUri"
+            :alt="imageTitle"
+            @click.stop="openOverlay">
         <div class="table-card-content">
-            <div v-if="title" class="table-card-title">{{title}}</div>
-            <div v-if="subtitle" class="table-card-subtitle">{{subtitle}}</div>
+            <div v-if="title" class="table-card-title" v-html="marked(title)" />
+            <div v-if="subtitle" class="table-card-subtitle" v-html="marked(subtitle)" />
         </div>
         <div class="table-card-scrollable">
             <table class="table-card-table" cellspacing="0" cellpadding="0">
                 <tr>
-                    <th v-for="(head, head_id) in header" :key="head_id">{{head.header}}</th>
+                    <th v-for="(head, head_id) in header" :key="head_id" v-html="marked(head.header)" />
                 </tr>
                 <tr v-for="(row, row_id) in rows" :key="row_id">
-                    <td v-for="(cell, cell_id) in row.cells" :key="cell_id">{{cell.text}}</td>
+                    <td v-for="(cell, cell_id) in row.cells" :key="cell_id" v-html="marked(cell.text)" />
                 </tr>
             </table>
         </div>
@@ -82,8 +87,11 @@
 </style>
 
 <script>
+import MarkdownMixin from '@/Mixins/Markdown.vue'
+
 export default {
     name: 'TableCard',
+    mixins: [MarkdownMixin],
     props: {
         title: {
             type: String,
@@ -108,6 +116,14 @@ export default {
         rows: {
             type: Array,
             default: null
+        }
+    },
+    methods: {
+        openOverlay(event){
+            const condition = true
+            if (condition){
+                this.$emit('openInOverlay', event.target)
+            }
         }
     }
 }

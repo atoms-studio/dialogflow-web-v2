@@ -15,7 +15,6 @@
 
 .suggestion
     @include reset
-    display: inline-block
     padding: 8px 12px
     border-radius: 40px
     border: 1px solid var(--border)
@@ -24,6 +23,7 @@
     margin-right: 5px
     font-weight: 500
     margin-bottom: 12px
+    //flex-grow: 1
 
 .suggestion[href]
     color: var(--accent)

@@ -1,21 +1,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- https://chatbot-das-dev.demomwd.it/front/ -->
-<link rel="stylesheet" type="text/css" href="./style.css">
+<script src="https://unpkg.com/core-js-bundle@3.0.0-beta.3"></script>
+<script src="https://unpkg.com/regenerator-runtime/runtime.js"></script>
+<script src="https://unpkg.com/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+
+<script src="https://unpkg.com/vue"></script>
+<script src="https://chatbot-das-dev.demomwd.it/front/chatbot-das.js"></script>
+
+<link rel="stylesheet" type="text/css" href="https://chatbot-das-dev.demomwd.it/front/style.css">
 
 <div class="chatbotdas_html">
     <div class="chat-pop-up chat-display-on ">
         <div class="chat_header_mobile">
-            <h1>Daisy</h1>
+            <h1>DASy</h1>
             <img class="reduce_chat" width="24" height="24" src="https://chatbot-das-dev.demomwd.it/front/img/reduce_chat.svg" alt="">
         </div>
-        <div id="app_chatbot_das"></div>
+        <chatbot-das></chatbot-das>
     </div>
-
-    <button class="toggle-chat">
+    <button class="toggle-chat ">
         <div class="content-chat">
             <img class="close-chat" src="https://chatbot-das-dev.demomwd.it/front/img/close_chat.svg">
-
             <span class="open-chat">
                 <img width="33" height="40" src="https://chatbot-das-dev.demomwd.it/front/img/logo_bot.png" alt="">
             </span>
@@ -23,5 +27,5 @@
     </button>
 </div>
 
-<script type="application/javascript" src="./startbot.js">
+<script type="application/javascript" src="https://chatbot-das-dev.demomwd.it/front/startbot.js">
 </script>

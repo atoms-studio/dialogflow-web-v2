@@ -1,5 +1,5 @@
 <template>
-    <main id="app">
+    <main id="app_chatbot_das" ref="appChat">
         <!-- TopHead is the header with the information about the app -->
         <TopHead v-if="app && messages.length > 0" :app="app">
             <!-- Audio toggle (on the top right corner), used to toggle the audio output, default mode is defined in the settings -->
@@ -8,123 +8,125 @@
                 :title="muted ? (translations[lang()] && translations[lang()].unMuteTitle) || translations[config.fallback_lang].unMuteTitle : (translations[lang()] && translations[lang()].muteTitle) || translations[config.fallback_lang].muteTitle"
                 :aria-label="muted ? (translations[lang()] && translations[lang()].unMuteTitle) || translations[config.fallback_lang].unMuteTitle : (translations[lang()] && translations[lang()].muteTitle) || translations[config.fallback_lang].muteTitle"
                 @click="muted = !muted">
-                <i aria-hidden="true" class="material-icons">{{muted ? 'volume_off': 'volume_up'}}</i>
+                <svg
+                    v-if="muted"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" /> </svg>
+                <svg
+                    v-else
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 18 18"><path d="M12.79 9c0-1.3-.72-2.42-1.79-3v6c1.06-.58 1.79-1.7 1.79-3zM2 7v4h3l4 4V3L5 7H2zm9-5v1.5c2.32.74 4 2.93 4 5.5s-1.68 4.76-4 5.5V16c3.15-.78 5.5-3.6 5.5-7S14.15 2.78 11 2z" /></svg>
             </button>
         </TopHead>
-        <section class="container chat-container">
-            <!-- Error component is for displaying errors -->
-            <Error v-if="error" :error="error" />
 
-            <!-- Welcome component is for onboarding experience and language picker -->
-            <Welcome v-if="app && messages.length == 0" :app="app" />
+        <div v-if="uploadFile" class="uploadFile">
+            <FileUpload @uploaded="uploaded" />
+        </div>
 
-            <!-- Messages Table -->
-            <section v-else aria-live="polite">
-                <div v-for="message in messages" id="message" :key="message.responseId">
-                    <!-- My message -->
-                    <BubbleWrapper><Bubble v-if="message.queryResult.queryText" :text="message.queryResult.queryText" me /></BubbleWrapper>
+        <div v-else>
+            <section ref="bubbles" class="container chat-container">
+                <!-- Error component is for displaying errors -->
+                <Error v-if="error" :error="error" />
 
-                    <!-- Dialogflow Components -->
-                    <RichComponent v-for="(component, component_id) in message.queryResult.fulfillmentMessages" :key="component_id">
-                        <!-- Text (https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#Text) -->
-                        <Bubble v-if="component.text" :text="component.text.text[0]" />
+                <!-- Welcome component is for onboarding experience and language picker -->
+                <Welcome v-if="app && messages.length == 0" :app="app" />
 
-                        <!-- SimpleResponses (https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#SimpleResponses) -->
-                        <Bubble
-                            v-if="component.simpleResponses"
-                            :text="component.simpleResponses.simpleResponses[0].displayText || component.simpleResponses.simpleResponses[0].textToSpeech"
-                        />
+                <!-- Messages Table -->
+                <section v-else aria-live="polite">
+                    <div v-for="message in messages" id="message" :key="message.responseId" ref="message">
+                        <!-- My message -->
+                        <BubbleWrapper v-if="userMessagePDF(message)">
+                            <UserBubble me>
+                                <a target="_new" :href="userMessagePDF(message)[0]">
+                                    <img style="height:15px" src="https://chatbot-das-dev.demomwd.it/front/img/pdf.png" alt="pdf icon">
+                                    {{userMessagePDF(message)[1]}}
+                                </a>
+                            </UserBubble>
+                        </BubbleWrapper>
+                        <span v-else>
+                            <BubbleWrapper><UserBubble v-if="message.queryResult.queryText" :text="message.queryResult.queryText" me /></BubbleWrapper>
+                        </span>
+                        <RichComponent v-if="message.queryResult.fulfillmentMessages.length === 0 && message.queryResult.knowledgeAnswers && message.queryResult.knowledgeAnswers.answers" class="knowledgeAnswer">
+                            <Bubble
+                                :text="message.queryResult.knowledgeAnswers.answers[0].answer"
+                            />
+                        </RichComponent>
 
-                        <!-- RbmText (https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#rbmtext) -->
-                        <div v-if="component.rbmText">
-                            <Bubble :text="component.rbmText.text" />
-                            <div v-for="(suggestion, suggestion_id) in component.rbmText.rbmSuggestion" :key="suggestion_id">
-                                <CardButton
-                                    v-if="suggestion.reply"
-                                    :title="suggestion.reply.text"
-                                    @click.native="send({text: suggestion.reply.text.postbackData})"
-                                />
-
-                                <CardButton
-                                    v-if="suggestion.action"
-                                    :title="suggestion.action.text"
-                                    :uri="suggestion.action.openUrl.uri"
+                        <!-- Dialogflow Components -->
+                        <RichComponent v-for="(component, component_id) in message.queryResult.fulfillmentMessages" :key="component_id" class="dialogflow">
+                            <!-- Text (https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#Text) -->
+                            <div class="Text">
+                                <Bubble v-if="component.text" :text="component.text.text[0]" />
+                            </div>
+                            <!-- SimpleResponses (https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#SimpleResponses) -->
+                            <div class="SimpleResponses">
+                                <Bubble
+                                    v-if="component.simpleResponses"
+                                    :text="component.simpleResponses.simpleResponses[0].displayText || component.simpleResponses.simpleResponses[0].textToSpeech"
                                 />
                             </div>
-                        </div>
 
-                        <!-- Card (https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#Card) -->
-                        <Card
-                            v-if="component.card"
-                            :title="component.card.title"
-                            :subtitle="component.card.subtitle"
-                            :image-uri="component.card.imageUri">
-                            <CardButton
-                                v-for="(button, button_id) in component.card.buttons"
-                                :key="button_id"
-                                :uri="button.postback"
-                                :title="button.text"
-                            />
-                        </Card>
+                            <!-- RbmText (https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#rbmtext) -->
+                            <div v-if="component.rbmText" class="RbmText">
+                                <Bubble :text="component.rbmText.text" />
+                                <div v-for="(suggestion, suggestion_id) in component.rbmText.rbmSuggestion" :key="suggestion_id">
+                                    <CardButton
+                                        v-if="suggestion.reply"
+                                        :title="suggestion.reply.text"
+                                        @click.native="send({text: suggestion.reply.text.postbackData})"
+                                    />
 
-                        <!-- BasicCard (https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#BasicCard) -->
-                        <Card
-                            v-if="component.basicCard"
-                            :title="component.basicCard.title"
-                            :subtitle="component.basicCard.subtitle"
-                            :image-uri="component.basicCard.image.imageUri"
-                            :image-title="component.basicCard.image.accessibilityText"
-                            :text="component.basicCard.formattedText">
-                            <CardButton
-                                v-for="(button, button_id) in component.basicCard.buttons"
-                                :key="button_id"
-                                :uri="button.openUriAction.uri"
-                                :title="button.title"
-                            />
-                        </Card>
-
-                        <!-- RbmStandaloneCard (https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#rbmstandalonecard) -->
-                        <Card
-                            v-if="component.rbmStandaloneRichCard"
-                            :title="component.rbmStandaloneRichCard.cardContent.title"
-                            :image-uri="component.rbmStandaloneRichCard.cardContent.media.fileUri"
-                            :text="component.rbmStandaloneRichCard.cardContent.description">
-                            <div v-for="(suggestion, suggestion_id) in component.rbmStandaloneRichCard.cardContent.suggestions" :key="suggestion_id">
-                                <CardButton
-                                    v-if="suggestion.reply"
-                                    :title="suggestion.reply.text"
-                                    @click.native="send({text: suggestion.reply.text.postbackData})"
-                                />
-                                <CardButton
-                                    v-if="suggestion.action"
-                                    :title="suggestion.action.text"
-                                    :uri="suggestion.action.openUrl.uri"
-                                />
+                                    <CardButton
+                                        v-if="suggestion.action"
+                                        :title="suggestion.action.text"
+                                        :uri="suggestion.action.openUrl.uri"
+                                    />
+                                </div>
                             </div>
-                        </Card>
 
-                        <!-- CarouselSelect (https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#CarouselSelect) -->
-                        <Carousel v-if="component.carouselSelect">
+                            <!-- Card (https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#Card) -->
                             <Card
-                                v-for="item in component.carouselSelect.items"
-                                :key="item.info.key"
-                                :title="item.title"
-                                :image-uri="item.image.imageUri"
-                                :image-title="item.image.accessibilityText"
-                                :text="item.description"
-                                @click.native="send({text: item.info.key})"
-                            />
-                        </Carousel>
+                                v-if="component.card"
+                                :title="component.card.title"
+                                :subtitle="component.card.subtitle"
+                                :image-uri="component.card.imageUri">
+                                <CardButton
+                                    v-for="(button, button_id) in component.card.buttons"
+                                    :key="button_id"
+                                    :uri="button.postback"
+                                    :title="button.text"
+                                />
+                            </Card>
 
-                        <!-- RbmCarouselCard (https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#rbmcarouselcard) -->
-                        <Carousel v-if="component.rbmCarouselRichCard">
+                            <!-- BasicCard (https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#BasicCard) -->
                             <Card
-                                v-for="(card, card_id) in component.rbmCarouselRichCard.cardContents"
-                                :key="card_id"
-                                :title="card.title"
-                                :image-uri="card.media.fileUri"
-                                :text="card.description">
-                                <div v-for="(suggestion, suggestion_id) in card.suggestions" :key="suggestion_id">
+                                v-if="component.basicCard"
+                                :title="component.basicCard.title"
+                                :subtitle="component.basicCard.subtitle"
+                                :image-uri="component.basicCard.image.imageUri"
+                                :image-title="component.basicCard.image.accessibilityText"
+                                :text="component.basicCard.formattedText"
+                                @click.native="openInOverlay({alt: component.basicCard.image.accessibilityText, src: component.basicCard.image.imageUri})"
+                            >
+                                <CardButton
+                                    v-for="(button, button_id) in component.basicCard.buttons"
+                                    :key="button_id"
+                                    :uri="button.openUriAction.uri"
+                                    :title="button.title"
+                                />
+                            </Card>
+
+                            <!-- RbmStandaloneCard (https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#rbmstandalonecard) -->
+                            <Card
+                                v-if="component.rbmStandaloneRichCard"
+                                :title="component.rbmStandaloneRichCard.cardContent.title"
+                                :image-uri="component.rbmStandaloneRichCard.cardContent.media.fileUri"
+                                :text="component.rbmStandaloneRichCard.cardContent.description">
+                                <div v-for="(suggestion, suggestion_id) in component.rbmStandaloneRichCard.cardContent.suggestions" :key="suggestion_id">
                                     <CardButton
                                         v-if="suggestion.reply"
                                         :title="suggestion.reply.text"
@@ -137,223 +139,329 @@
                                     />
                                 </div>
                             </Card>
-                        </Carousel>
 
-                        <!-- ListSelect (https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#ListSelect) -->
-                        <List
-                            v-if="component.listSelect"
-                            :title="component.listSelect.title"
-                            :subtitle="component.listSelect.subtitle">
-                            <ListItem
-                                v-for="item in component.listSelect.items"
-                                :key="item.info.key"
-                                :title="item.title"
-                                :description="item.description"
-                                :image-uri="item.image.imageUri"
-                                :image-title="item.image.accessibilityText"
-                                @click.native="send({text: item.info.key})"
-                            />
-                        </List>
+                            <!-- CarouselSelect (https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#CarouselSelect) -->
+                            <Carousel v-if="component.carouselSelect">
+                                <span v-if="!isFeedback(message)" style="cursor: zoom-in;">
+                                    <!-- Cards to be opened with Overlay -->
+                                    <Card
+                                        v-for="item in component.carouselSelect.items"
+                                        :key="item.info.key"
+                                        :title="item.title"
+                                        :image-uri="item.image.imageUri"
+                                        :image-title="item.image.accessibilityText"
+                                        :text="item.description"
+                                        @click.native="openInOverlay({alt: item.image.accessibilityText, src: item.image.imageUri})"
+                                    />
+                                </span>
+                                <span v-else>
+                                    <!-- Cards to be pressed as Feedback Buttons -->
+                                    <Card
+                                        v-for="item in component.carouselSelect.items"
+                                        :key="item.info.key"
+                                        :title="item.title"
+                                        :image-uri="item.image.imageUri"
+                                        :image-title="item.image.accessibilityText"
+                                        :text="item.description"
+                                        style-img="img {height: 75px !important; width: 75px !important;} "
+                                        @click.native="conditionalSend(message, {text: item.info.key})"
+                                    />
+                                </span>
+                            </Carousel>
 
-                        <!-- Image (https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#Image) -->
-                        <Picture v-if="component.image" :uri="component.image.imageUri" :title="component.image.accessibilityText" />
 
-                        <!-- Media (https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#MediaContent) -->
-                        <div v-if="component.mediaContent && component.mediaContent.mediaObjects">
-                            <Media
-                                v-for="(media, media_id) in component.mediaContent.mediaObjects"
-                                :key="media_id"
-                                :name="media.name"
-                                :description="media.description"
-                                :icon-uri="media.icon ? media.icon.imageUri : media.largeImage.imageUri"
-                                :icon-title="media.icon ? media.icon.accessibilityText : media.largeImage.accessibilityText"
-                                :uri="media.contentUrl"
-                            />
-                        </div>
+                            <!-- RbmCarouselCard (https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#rbmcarouselcard) -->
+                            <Carousel v-if="component.rbmCarouselRichCard">
+                                <Card
+                                    v-for="(card, card_id) in component.rbmCarouselRichCard.cardContents"
+                                    :key="card_id"
+                                    :title="card.title"
+                                    :image-uri="card.media.fileUri"
+                                    :text="card.description">
+                                    <div v-for="(suggestion, suggestion_id) in card.suggestions" :key="suggestion_id">
+                                        <CardButton
+                                            v-if="suggestion.reply"
+                                            :title="suggestion.reply.text"
+                                            @click.native="send({text: suggestion.reply.text.postbackData})"
+                                        />
+                                        <CardButton
+                                            v-if="suggestion.action"
+                                            :title="suggestion.action.text"
+                                            :uri="suggestion.action.openUrl.uri"
+                                        />
+                                    </div>
+                                </Card>
+                            </Carousel>
 
-                        <!-- TableCard (https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#tablecard) -->
-                        <TableCard
-                            v-if="component.tableCard"
-                            :title="component.tableCard.title"
-                            :subtitle="component.tableCard.subtitle"
-                            :image-uri="component.tableCard.image.imageUri"
-                            :image-title="component.tableCard.image.accessibilityText"
-                            :header="component.tableCard.columnProperties"
-                            :rows="component.tableCard.rows">
-                            <CardButton
-                                v-for="(button, button_id) in component.tableCard.buttons"
-                                :key="button_id"
-                                :uri="button.openUriAction.uri"
-                                :title="button.title"
-                            />
-                        </TableCard>
-                    </RichComponent>
-
-                    <!-- Actions on Google Components -->
-                    <section v-if="message.queryResult.webhookPayload && message.queryResult.webhookPayload.google">
-                        <RichComponent v-for="(component, component_id) in message.queryResult.webhookPayload.google.richResponse.items" :key="component_id">
-                            <!-- Simple response (https://developers.google.com/actions/assistant/responses#simple_response) -->
-                            <Bubble
-                                v-if="component.simpleResponse"
-                                :text="component.simpleResponse.displayText || component.simpleResponse.textToSpeech"
-                            />
-
-                            <!-- Basic card (https://developers.google.com/actions/assistant/responses#basic_card) -->
-                            <Card
-                                v-if="component.basicCard"
-                                :title="component.basicCard.title"
-                                :subtitle="component.basicCard.subtitle"
-                                :image-uri="component.basicCard.image.url"
-                                :image-title="component.basicCard.image.accessibilityText"
-                                :text="component.basicCard.formattedText">
-                                <CardButton
-                                    v-for="(button, button_id) in component.basicCard.buttons"
-                                    :key="button_id"
-                                    :uri="button.openUrlAction.url"
-                                    :title="button.title"
-                                />
-                            </Card>
-
-                            <!-- Browsing Carousel (https://developers.google.com/actions/assistant/responses#browsing_carousel) -->
-                            <List v-if="component.carouselBrowse">
-                                <ListItem
-                                    v-for="(item, item_id) in component.carouselBrowse.items"
-                                    :key="item_id"
-                                    :uri="item.openUrlAction.url"
-                                    :title="item.title"
-                                    :description="item.description"
-                                    :footer="item.footer"
-                                    :image-uri="item.image.url"
-                                    :image-title="item.image.accessibilityText"
-                                />
-                            </List>
-
-                            <!-- Media responses (https://developers.google.com/actions/assistant/responses#media_responses) -->
-                            <div v-if="component.mediaResponse && component.mediaResponse.mediaObjects">
-                                <Media
-                                    v-for="(media, media_id) in component.mediaResponse.mediaObjects"
-                                    :key="media_id"
-                                    :name="media.name"
-                                    :description="media.description"
-                                    :icon-uri="media.icon.url"
-                                    :icon-title="media.icon.accessibilityText"
-                                    :uri="media.contentUrl"
-                                />
-                            </div>
-
-                            <!-- Table cards (https://developers.google.com/actions/assistant/responses#table_cards) -->
-                            <TableCard
-                                v-if="component.tableCard"
-                                :title="component.tableCard.title"
-                                :subtitle="component.tableCard.subtitle"
-                                :image-uri="component.tableCard.image.url"
-                                :image-title="component.tableCard.image.accessibilityText"
-                                :header="component.tableCard.columnProperties"
-                                :rows="component.tableCard.rows">
-                                <CardButton
-                                    v-for="(button, button_id) in component.tableCard.buttons"
-                                    :key="button_id"
-                                    :uri="button.openUrlAction.url"
-                                    :title="button.title"
-                                />
-                            </TableCard>
-                        </RichComponent>
-
-                        <!-- Visual Selection Responses (https://developers.google.com/actions/assistant/responses#visual_selection_responses) -->
-                        <RichComponent v-for="(component, component_id) in message.queryResult.webhookPayload.google.systemIntent" :key="component_id">
-                            <!-- List (https://developers.google.com/actions/assistant/responses#list) -->
+                            <!-- ListSelect (https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#ListSelect) -->
                             <List
                                 v-if="component.listSelect"
                                 :title="component.listSelect.title"
                                 :subtitle="component.listSelect.subtitle">
                                 <ListItem
                                     v-for="item in component.listSelect.items"
-                                    :key="item.optionInfo.key"
+                                    :key="item.info.key"
                                     :title="item.title"
                                     :description="item.description"
-                                    :image-uri="item.image.url"
+                                    :image-uri="item.image.imageUri"
                                     :image-title="item.image.accessibilityText"
-                                    @click.native="send({text: item.optionInfo.key})"
                                 />
                             </List>
 
-                            <!-- Carousel (https://developers.google.com/actions/assistant/responses#carousel) -->
-                            <Carousel v-if="component.carouselSelect">
-                                <Card
-                                    v-for="item in component.carouselSelect.items"
-                                    :key="item.optionInfo.key"
-                                    :title="item.title"
-                                    :image-uri="item.image.url"
-                                    :image-title="item.image.accessibilityText"
-                                    :text="item.description"
-                                    @click.native="send({text: item.optionInfo.key})"
+                            <!-- Image (https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#Image) -->
+                            <Picture
+                                v-if="component.image"
+                                :uri="component.image.imageUri"
+                                :title="component.image.accessibilityText"
+                            />
+
+                            <!-- Media (https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#MediaContent) -->
+                            <div v-if="component.mediaContent && component.mediaContent.mediaObjects">
+                                <Media
+                                    v-for="(media, media_id) in component.mediaContent.mediaObjects"
+                                    :key="media_id"
+                                    :name="media.name"
+                                    :description="media.description"
+                                    :icon-uri="media.icon ? media.icon.imageUri : media.largeImage.imageUri"
+                                    :icon-title="media.icon ? media.icon.accessibilityText : media.largeImage.accessibilityText"
+                                    :uri="media.contentUrl"
                                 />
-                            </Carousel>
+                            </div>
+
+                            <!-- TableCard (https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#tablecard) -->
+                            <TableCard
+                                v-if="component.tableCard"
+                                :title="component.tableCard.title"
+                                :subtitle="component.tableCard.subtitle"
+                                :image-uri="component.tableCard.image.imageUri"
+                                :image-title="component.tableCard.image.accessibilityText"
+                                :header="component.tableCard.columnProperties"
+                                :rows="component.tableCard.rows">
+                                <CardButton
+                                    v-for="(button, button_id) in component.tableCard.buttons"
+                                    :key="button_id"
+                                    :uri="button.openUriAction.uri"
+                                    :title="button.title"
+                                />
+                            </TableCard>
                         </RichComponent>
-                    </section>
-                </div>
-                <div v-if="loading" id="message">
-                    <!-- My message (Loading) -->
-                    <BubbleWrapper><Bubble me loading aria-hidden="true" /></BubbleWrapper>
 
-                    <!-- Default / Webhook bubble (Loading) -->
-                    <Bubble loading aria-hidden="true" />
-                </div>
+                        <!-- Actions on Google Components -->
+                        <section v-if="message.queryResult.webhookPayload && message.queryResult.webhookPayload.google" class="googleComponents">
+                            <RichComponent v-for="(component, component_id) in message.queryResult.webhookPayload.google.richResponse.items" :key="component_id">
+                                <!-- Simple response (https://developers.google.com/actions/assistant/responses#simple_response) -->
+                                <Bubble
+                                    v-if="component.simpleResponse"
+                                    :text="component.simpleResponse.displayText || component.simpleResponse.textToSpeech"
+                                />
+
+                                <!-- Basic card (https://developers.google.com/actions/assistant/responses#basic_card) -->
+                                <Card
+                                    v-if="component.basicCard"
+                                    :title="component.basicCard.title"
+                                    :subtitle="component.basicCard.subtitle"
+                                    :image-uri="component.basicCard.image.url"
+                                    :image-title="component.basicCard.image.accessibilityText"
+                                    :text="component.basicCard.formattedText">
+                                    <CardButton
+                                        v-for="(button, button_id) in component.basicCard.buttons"
+                                        :key="button_id"
+                                        :uri="button.openUrlAction.url"
+                                        :title="button.title"
+                                    />
+                                </Card>
+
+                                <!-- Browsing Carousel (https://developers.google.com/actions/assistant/responses#browsing_carousel) -->
+                                <List v-if="component.carouselBrowse">
+                                    <ListItem
+                                        v-for="(item, item_id) in component.carouselBrowse.items"
+                                        :key="item_id"
+                                        :uri="item.openUrlAction.url"
+                                        :title="item.title"
+                                        :description="item.description"
+                                        :footer="item.footer"
+                                        :image-uri="item.image.url"
+                                        :image-title="item.image.accessibilityText"
+                                    />
+                                </List>
+
+                                <!-- Media responses (https://developers.google.com/actions/assistant/responses#media_responses) -->
+                                <div v-if="component.mediaResponse && component.mediaResponse.mediaObjects">
+                                    <Media
+                                        v-for="(media, media_id) in component.mediaResponse.mediaObjects"
+                                        :key="media_id"
+                                        :name="media.name"
+                                        :description="media.description"
+                                        :icon-uri="media.icon.url"
+                                        :icon-title="media.icon.accessibilityText"
+                                        :uri="media.contentUrl"
+                                    />
+                                </div>
+
+                                <!-- Table cards (https://developers.google.com/actions/assistant/responses#table_cards) -->
+                                <TableCard
+                                    v-if="component.tableCard"
+                                    :title="component.tableCard.title"
+                                    :subtitle="component.tableCard.subtitle"
+                                    :image-uri="component.tableCard.image.url"
+                                    :image-title="component.tableCard.image.accessibilityText"
+                                    :header="component.tableCard.columnProperties"
+                                    :rows="component.tableCard.rows">
+                                    <CardButton
+                                        v-for="(button, button_id) in component.tableCard.buttons"
+                                        :key="button_id"
+                                        :uri="button.openUrlAction.url"
+                                        :title="button.title"
+                                    />
+                                </TableCard>
+                            </RichComponent>
+
+                            <!-- Visual Selection Responses (https://developers.google.com/actions/assistant/responses#visual_selection_responses) -->
+                            <RichComponent v-for="(component, component_id) in message.queryResult.webhookPayload.google.systemIntent" :key="component_id">
+                                <!-- List (https://developers.google.com/actions/assistant/responses#list) -->
+                                <List
+                                    v-if="component.listSelect"
+                                    :title="component.listSelect.title"
+                                    :subtitle="component.listSelect.subtitle">
+                                    <ListItem
+                                        v-for="item in component.listSelect.items"
+                                        :key="item.optionInfo.key"
+                                        :title="item.title"
+                                        :description="item.description"
+                                        :image-uri="item.image.url"
+                                        :image-title="item.image.accessibilityText"
+                                        @click.native="conditionalSend(message, {text: item.optionInfo.key})"
+                                    />
+                                </List>
+
+                                <!-- Carousel (https://developers.google.com/actions/assistant/responses#carousel) -->
+                                <Carousel v-if="component.carouselSelect">
+                                    <Card
+                                        v-for="item in component.carouselSelect.items"
+                                        :key="item.optionInfo.key"
+                                        :title="item.title"
+                                        :image-uri="item.image.url"
+                                        :image-title="item.image.accessibilityText"
+                                        :text="item.description"
+                                        @click.native="conditionalSend(message, {text: item.optionInfo.key})"
+                                    />
+                                </Carousel>
+                            </RichComponent>
+                        </section>
+                    </div>
+                    <div v-if="loading" id="message">
+                        <!-- My message (Loading) -->
+                        <BubbleWrapper><Bubble me loading aria-hidden="true" /></BubbleWrapper>
+
+                        <!-- Default / Webhook bubble (Loading) -->
+                        <Bubble loading aria-hidden="true" />
+                    </div>
+                </section>
             </section>
-        </section>
 
-        <!-- ChatInput is made for submitting queries and displaying suggestions -->
-        <ChatInput ref="input" @submit="send">
-            <!-- Suggestion chips
+            <!-- ChatInput is made for submitting queries and displaying suggestions -->
+            <ChatInput
+                ref="input"
+                :disabled="messages.length < 3"
+                :messages="messages"
+                @submit="send">
+                <!-- Suggestion chips
                 https://developers.google.com/actions/assistant/responses#suggestion_chips
                 https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#QuickReplies
                 https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#Suggestions
             -->
-            <Suggestion
-                v-for="(suggestion, suggestion_id) in suggestions.text_suggestions"
-                :key="suggestion_id"
-                :title="suggestion"
-                @click.native="send({text: suggestion})"
-            />
+                <Suggestion
+                    v-for="(suggestion, suggestion_id) in suggestions.text_suggestions"
+                    :key="suggestion_id"
+                    :title="suggestion"
+                    @click.native="send({text: suggestion})"
+                />
 
-            <!-- Link suggestion chips
+                <!-- Link suggestion chips
                 https://developers.google.com/actions/assistant/responses#suggestion_chips
                 https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/projects.agent.intents#LinkOutSuggestion
             -->
-            <Suggestion
-                v-if="suggestions.link_suggestion"
-                :title="suggestions.link_suggestion.destinationName"
-                :uri="suggestions.link_suggestion.uri || suggestions.link_suggestion.url"
+                <Suggestion
+                    v-if="suggestions.link_suggestion"
+                    :title="suggestions.link_suggestion.destinationName"
+                    :uri="suggestions.link_suggestion.uri || suggestions.link_suggestion.url"
+                />
+            </ChatInput>
+        </div>
+
+        <portal>
+            <OverlayImage
+                :img="overlayImg"
+                :show="showOverlay"
+                @closeOverlay="closeOverlay"
+                @closeAnimationEnded="removeOverlayImage"
             />
-        </ChatInput>
+        </portal>
     </main>
 </template>
-
 <style lang="sass">
+@import '@/Style/Reset.sass'
 @import '@/Style/Theme.sass'
 
-body
+.relative
+    position: relative
+    @media screen and (max-width: 450px)
+
+.fixed
+    position: fixed
+
+#app_chatbot_das
     margin: 0
     padding: 0
     font-family: var(--font)
     font-display: swap
     background-color: var(--background)
+    height: 100%
+    overflow: hidden
+    overflow-y: auto
+    scroll-behavior: smooth
 
 .container
-    max-width: 500px
+    max-width: 100%
     margin-left: auto
     margin-right: auto
     padding: 12px
     position: relative
-</style>
 
-<style lang="sass" scoped>
 .chat-container
-    padding-top: 80px
-    padding-bottom: 125px
+    padding-bottom: 25px
 </style>
 
 <script>
+import Vue from 'vue'
+import config from '../Config'
+import translations from '../Translations/translations.json'
+import {Portal} from '@linusborg/vue-simple-portal'
+
+
+Vue.config.productionTip = false
+Vue.prototype.config = config // <- set config to global scope
+Vue.prototype.translations = translations // <- set translations to global scope
+
+/* (global) This code is going to tell us, if history mode can be activated on the client, so the application can be consumed without sessionStorage */
+Vue.prototype.history = () => {
+    try {
+        sessionStorage.getItem('check')
+        return true
+    }
+
+    catch {
+        return false
+    }
+}
+
+/* (global) Currently selected language or fallback language (en). Needs to be a function, since it's reactive. No need for vuex there */
+Vue.prototype.lang = () => {
+    if (Vue.prototype.history()) return sessionStorage.getItem('lang') || config.fallback_lang
+    return config.fallback_lang
+}
+
+
 import Welcome from './Welcome.vue'
 
 import Error from '@/Components/Parts/Error.vue'
@@ -362,6 +470,7 @@ import ChatInput from '@/Components/Parts/ChatInput.vue'
 
 import RichComponent from '@/Components/Rich/Component.vue'
 import Bubble from '@/Components/Rich/Bubble.vue'
+import UserBubble from '@/Components/Rich/UserBubble.vue'
 import BubbleWrapper from '@/Components/Rich/BubbleWrapper.vue'
 import Card from '@/Components/Rich/Card.vue'
 import CardButton from '@/Components/Rich/CardButton.vue'
@@ -372,10 +481,14 @@ import Picture from '@/Components/Rich/Picture.vue'
 import Media from '@/Components/Rich/Media.vue'
 import TableCard from '@/Components/Rich/TableCard.vue'
 import Suggestion from '@/Components/Rich/Suggestion.vue'
+import OverlayImage from '@/Components/OverlayImage.vue'
+import OverlayMixin from '@/Mixins/OverlayMixin.vue'
 
 import * as uuidv1 from 'uuid/v1'
 
 import { Client } from 'dialogflow-gateway'
+
+import FileUpload from '@/Components/FileUpload.vue'
 
 export default {
     name: 'App',
@@ -386,6 +499,7 @@ export default {
         ChatInput,
         RichComponent,
         Bubble,
+        UserBubble,
         BubbleWrapper,
         Card,
         CardButton,
@@ -395,8 +509,12 @@ export default {
         Picture,
         Media,
         TableCard,
-        Suggestion
+        Suggestion,
+        FileUpload,
+        OverlayImage,
+        Portal
     },
+    mixins: [OverlayMixin],
     data(){
         return {
             app: null,
@@ -406,14 +524,21 @@ export default {
             muted: this.config.muted,
             loading: false,
             error: null,
-            client: new Client(this.config.endpoint).connect()
+            client: new Client(this.config.endpoint).connect(),
+            uploadFile: false
         }
     },
     computed: {
         /* The code below is used to extract suggestions from last message, to display it on ChatInput */
+        lastMessage(){
+            if (this.messages.length > 0){
+                return this.messages[this.messages.length - 1]
+            }
+            return undefined
+        },
         suggestions(){
             if (this.messages.length > 0){
-                const last_message = this.messages[this.messages.length - 1]
+                const last_message = this.lastMessage
                 const suggestions = []
 
                 /* Dialogflow Suggestions */
@@ -442,20 +567,32 @@ export default {
     watch: {
         /* This function is triggered, when new messages arrive */
         messages(messages){
-            if (this.history()) sessionStorage.setItem('message_history', JSON.stringify(messages)) // <- Save history if the feature is enabled
+            if (this.history()){ // <- Save history if the feature is enabled
+                try {
+                    sessionStorage.setItem('message_history', JSON.stringify(messages))
+                } catch (e){
+                    // console.log(`Quota exceeded!${messages.length}`)
+                }
+            }
+
+            this.uploadFile = false
+            setTimeout(thisRef => {
+                const app = thisRef.$refs.appChat
+                app.scrollTop = app.scrollHeight
+            }, 500, this)
         },
         /* This function is triggered, when request is started or finished */
         loading(){
             setTimeout(() => {
-                const app = document.querySelector('#app') // <- We need to scroll down #app, to prevent the whole page jumping to bottom, when using in iframe
+                const app = this.$refs.appChat // <- We need to scroll down #app_chatbot_das, to prevent the whole page jumping to bottom, when using in iframe
                 if (app.querySelector('#message')){
-                    const message = app.querySelectorAll('#message')[app.querySelectorAll('#message').length - 1].offsetTop - 68
-                    window.scrollTo({top: message, behavior: 'smooth'})
+                    app.scrollTop = app.scrollHeight
                 }
-            }, 2) // <- wait for render (timeout) and then smoothly scroll #app down to the last message
+            }, 2) // <- wait for render (timeout) and then smoothly scroll #app_chatbot_das down to the last message
         }
     },
     created(){
+        this.newChatToday()
         /* If history is enabled, the messages are retrieved from sessionStorage */
         if (this.history() && sessionStorage.getItem('message_history') !== null){
             this.messages = JSON.parse(sessionStorage.getItem('message_history'))
@@ -488,11 +625,80 @@ export default {
         }
     },
     methods: {
+        capitalize(s){
+            if (typeof s !== 'string') return ''
+            return s.charAt(0).toUpperCase() + s.slice(1)
+        },
+        userMessagePDF(message){
+            try {
+                const jsonMess = JSON.parse(message.queryResult.queryText)
+                if (jsonMess && jsonMess.fileUploaded){
+                    const url = jsonMess.url
+                    const name = `${this.capitalize(jsonMess.name || 'file.pdf')}`
+                    return [url, name]
+                }
+                return undefined
+            } catch (err){
+                return undefined
+            }
+        },
+        newChatToday(){
+            const setCookie = (c_name, value) =>
+            {
+                const date = new Date()
+                date.setTime(date.getTime() + 10 * 60 * 1000)
+                const c_value = `${escape(value)}; expires=${date.toUTCString()}`
+                document.cookie = `${c_name}=${c_value}`
+            }
+            const getCookie = name => {
+                const value = `; ${document.cookie}`
+                const parts = value.split(`; ${name}=`)
+                if (parts.length === 2) return parts.pop().split(';').shift()
+            }
+
+            const chatInThePast = getCookie('chatbot_das')
+            if (!chatInThePast){
+                sessionStorage.removeItem('message_history')
+                sessionStorage.removeItem('session')
+                sessionStorage.removeItem('agent')
+                setCookie('chatbot_das', 'today')
+            }
+        },
+        uploaded(url){
+            if (url === 'annulla'){
+                this.send({text: 'annulla'})
+            } else {
+                this.send({text: JSON.stringify(url)})
+            }
+        },
+        isFeedback(message){
+            if (message.queryResult.intent && message.queryResult.intent.displayName){
+                const intent = message.queryResult.intent.displayName || ''
+                const isFeedback = intent === 'Fine - no' || intent === 'Feedback'
+                return isFeedback
+            }
+            return false
+        },
+        conditionalSend(message, submission){
+            if (this.isFeedback(message)){
+                const actionMessageId = message.responseId
+                const indexMessage = this.messages.findIndex(mess => mess.responseId === actionMessageId)
+                const distanceMessages = this.messages.length - indexMessage
+                if (distanceMessages <= 1) return this.send(submission)
+            }
+            return null
+        },
         send(submission){
             let request
 
-            /* Text request */
-            if (submission.text){
+            /*
+             * condition to open the UploadFile dialog
+             * TODO add the real condition based on "allega" in response
+             */
+            const submissionText = submission.text.toLowerCase()
+            if (submissionText === 'allega' && this.lastMessage && this.lastMessage.queryResult.fulfillmentText.includes('Se lo desideri puoi allegare')){
+                this.uploadFile = true
+            } else if (submission.text){
                 request = {
                     session: this.session,
                     queryInput: {
@@ -503,7 +709,6 @@ export default {
                     }
                 }
             }
-
             /* Audio request */
             else if (submission.audio){
                 request = {
@@ -535,37 +740,47 @@ export default {
         },
         handle(response){
             /* This function is used for speech output */
-            if (response.outputAudio){
-                const output = new Audio(`data:audio/mp3;base64,${response.outputAudio}`)
-                output.onended = () => this.$refs.input.listen()
+            /*
+             * if (response.outputAudio){
+             *     const output = new Audio(`data:audio/mp3;base64,${response.outputAudio}`)
+             *     output.onended = () => this.$refs.input.listen()
+             */
 
-                if (!this.muted) output.play()
+            /*
+             *     if (!this.muted) output.play()
+             * }
+             */
+
+            // else {
+            let text = '' // <- init a text variable
+
+            /* Dialogflow Text/SimpleResponses */
+            for (const component in response.queryResult.fulfillmentMessages){
+                text += ' '
+                if (response.queryResult.fulfillmentMessages[component].text) text += response.queryResult.fulfillmentMessages[component].text.text[0]
+                if (response.queryResult.fulfillmentMessages[component].simpleResponses) text += response.queryResult.fulfillmentMessages[component].simpleResponses.simpleResponses[0].textToSpeech
+                if (response.queryResult.fulfillmentMessages[component].rbmText) text += response.queryResult.fulfillmentMessages[component].rbmText.text
             }
 
-            else {
-                let text // <- init a text variable
-
-                /* Dialogflow Text/SimpleResponses */
-                for (const component in response.queryResult.fulfillmentMessages){
-                    if (response.queryResult.fulfillmentMessages[component].text) text = response.queryResult.fulfillmentMessages[component].text.text[0]
-                    if (response.queryResult.fulfillmentMessages[component].simpleResponses) text = response.queryResult.fulfillmentMessages[component].simpleResponses.simpleResponses[0].textToSpeech
-                    if (response.queryResult.fulfillmentMessages[component].rbmText) text = response.queryResult.fulfillmentMessages[component].rbmText.text
+            /* Actions on Google Simple response */
+            if (response.queryResult.webhookPayload && response.queryResult.webhookPayload.google){
+                for (const component in response.queryResult.webhookPayload.google){
+                    text += ' '
+                    if (response.queryResult.webhookPayload.google[component].simpleResponse) text += response.queryResult.webhookPayload.google[component].simpleResponse.textToSpeech
                 }
-
-                /* Actions on Google Simple response */
-                if (response.queryResult.webhookPayload && response.queryResult.webhookPayload.google){
-                    for (const component in response.queryResult.webhookPayload.google){
-                        if (response.queryResult.webhookPayload.google[component].simpleResponse) text = response.queryResult.webhookPayload.google[component].simpleResponse.textToSpeech
-                    }
-                }
-
-                const speech = new SpeechSynthesisUtterance(text)
-                speech.voiceURI = this.config.voice
-                speech.lang = this.lang()
-                speech.onend = () => this.$refs.input.listen()
-
-                if (!this.muted) window.speechSynthesis.speak(speech) // <- if app is not muted, speak out the speech
             }
+
+            if (response.queryResult.fulfillmentMessages.length === 0 && response.queryResult.knowledgeAnswers && response.queryResult.knowledgeAnswers.answers){
+                text = response.queryResult.knowledgeAnswers.answers[0].answer
+            }
+
+            const speech = new SpeechSynthesisUtterance(text)
+            speech.voiceURI = this.config.voice
+            speech.lang = this.lang()
+            speech.onend = () => this.$refs.input.listen()
+
+            if (!this.muted) window.speechSynthesis.speak(speech) // <- if app is not muted, speak out the speech
+            // }
         }
     }
 }

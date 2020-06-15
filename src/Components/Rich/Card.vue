@@ -1,10 +1,16 @@
 <template>
     <div class="card" tabindex="0">
-        <img v-if="imageUri" class="card-image" :src="imageUri" :alt="imageTitle || title">
+        <img
+            v-if="imageUri"
+            class="card-image "
+            :src="imageUri"
+            :alt="imageTitle || title"
+            :style="styleImg"
+        >
         <div class="card-content">
-            <div v-if="title" class="card-title">{{title}}</div>
-            <div v-if="subtitle" class="card-subtitle">{{subtitle}}</div>
-            <div v-if="text" class="card-text">{{text}}</div>
+            <div v-if="title" class="card-title" v-html="marked(title)" />
+            <div v-if="subtitle" class="card-subtitle" v-html="marked(subtitle)" />
+            <div v-if="text" class="card-text" v-html="marked(text)" />
             <slot />
         </div>
     </div>
@@ -23,6 +29,9 @@
     border-top-right-radius: 10px
     border-top-left-radius: 10px
     background-color: var(--image-background)
+    max-width: 300px
+    margin: 0 auto
+    display: block
 
 .card-content
     padding: 16px
@@ -48,8 +57,11 @@
 </style>
 
 <script>
+import MarkdownMixin from '@/Mixins/Markdown.vue'
+
 export default {
     name: 'Card',
+    mixins: [MarkdownMixin],
     props: {
         text: {
             type: String,
@@ -68,6 +80,10 @@ export default {
             default: null
         },
         title: {
+            type: String,
+            default: null
+        },
+        styleImg: {
             type: String,
             default: null
         }

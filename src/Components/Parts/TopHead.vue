@@ -1,10 +1,15 @@
 <template>
     <header class="app-head">
-        <img v-if="app.avatarUri" class="app-icon" :alt="app.displayName" :src="app.avatarUri">
-        <img v-else class="app-icon" src="https://console.dialogflow.com/api-client/assets/img/logo-short.png" :alt="app.displayName">
+        <img
+            v-if="app.avatarUri"
+            class="app-icon"
+            :alt="app.displayName"
+            :src="app.avatarUri"
+            @click="scrollToTop"
+        >
+        <img v-else class="app-icon" src="https://chatbot-das-dev.demomwd.it/front/img/logo_bot.png" :alt="app.displayName">
         <div class="app-info">
-            <div class="app-name">{{app.displayName}}</div>
-            <div class="app-poweredby">Built with <a target="_blank" rel="noopener noreferrer" href="https://dialogflow.cloud.ushakov.co" aria-hidden="true">Dialogflow Gateway</a></div>
+            <!-- <div class="app-name">{{app.displayName}}</div> -->
         </div>
         <slot />
     </header>
@@ -16,18 +21,18 @@
 .app-head
     z-index: 666
     padding: 12px
-    position: fixed
+    position: sticky
     width: 100%
-
-    @media screen and (max-width: 1000px)
-        background-color: var(--background)
+    top: 0px
 
     .app-icon
         border-radius: 8px
-        width: 30px
-        height: 30px
+        width: 40px
+        height: 40px
         object-fit: cover
-        background-color: var(--image-background)
+        background-color: white
+        box-shadow: 1px 4px 8px rgba(0,0,0,0.4) !important
+        padding: 4px
 
     .app-info
         display: inline-block
@@ -50,10 +55,10 @@
 .audio-toggle
     @include reset
     display: flex
-    position: fixed
     top: 0
     right: 0
-    margin: 8.5px 0
+    float: right
+    margin-right: 13px
     z-index: 999
     padding: 8px
     background-color: var(--element-background)
@@ -61,6 +66,9 @@
     cursor: pointer
     color: var(--text)
     transition: padding .25s ease
+    border: 1px solid var(--border)
+    border-right: 0px
+
 
     &:hover
         padding-right: 20px
@@ -73,6 +81,11 @@ export default {
         app: {
             type: Object,
             default: null
+        }
+    },
+    methods: {
+        scrollToTop(){
+            this.$parent.$refs.appChat.scroll(0, 0)
         }
     }
 }

@@ -1,7 +1,7 @@
 <template>
     <div class="list">
-        <div v-if="title" class="list-title">{{title}}</div>
-        <div v-if="subtitle" class="list-subtitle">Subtitle</div>
+        <div v-if="title" class="list-title" v-html="marked(title)" />
+        <div v-if="subtitle" class="list-subtitle" v-html="marked(subtitle)" />
         <ul :aria-label="title" class="list-content"><slot /></ul>
     </div>
 </template>
@@ -30,8 +30,11 @@
 </style>
 
 <script>
+import MarkdownMixin from '@/Mixins/Markdown.vue'
+
 export default {
     name: 'List',
+    mixins: [MarkdownMixin],
     props: {
         title: {
             type: String,
@@ -42,5 +45,6 @@ export default {
             default: null
         }
     }
+
 }
 </script>
