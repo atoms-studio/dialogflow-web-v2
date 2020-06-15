@@ -130,7 +130,9 @@
 .chat_header_mobile img {
   float: right;
   vertical-align: middle;
-  padding: 4px;
+  margin-top: -6px;
+  height: 45px;
+  width: 45px;
 }
 
 @media (max-width: 450px) {
