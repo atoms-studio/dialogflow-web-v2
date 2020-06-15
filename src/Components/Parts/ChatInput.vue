@@ -135,7 +135,24 @@ export default {
     },
     computed: {
         microphone_supported(){
-            return window.webkitSpeechRecognition || window.SpeechRecognition || !window.MediaRecorder.notSupported
+            const isChrome = (/Chrome/).test(navigator.userAgent) && (/Google Inc/).test(navigator.vendor)
+
+            const isOpera = navigator.userAgent.indexOf('Opera') != -1 || navigator.userAgent.indexOf('OPR') != -1
+
+            const isIE = navigator.userAgent.indexOf('MSIE') != -1
+
+            const isEdgeChromium = isChrome && navigator.userAgent.indexOf('Edg') != -1
+
+            const isFirefox = navigator.userAgent.indexOf('Firefox') != -1
+
+            const isSafari = navigator.userAgent.indexOf('Safari') != -1 && !isChrome
+
+            const isAndroid = navigator.userAgent.match(/Android/i) !== null
+
+            const speechComputer = !isEdgeChromium && (window.webkitSpeechRecognition || window.SpeechRecognition || !window.MediaRecorder.notSupported)
+            const speechAndroid = isEdgeChromium || isChrome
+
+            return !isSafari && !isOpera && !isIE && !isFirefox && speechComputer || isAndroid && speechAndroid
         }
     },
     watch: {
