@@ -29,7 +29,7 @@
         border-radius: 8px
         width: 40px
         height: 40px
-        object-fit: cover
+        object-fit: contain
         background-color: white
         box-shadow: 1px 4px 8px rgba(0,0,0,0.4) !important
         padding: 4px
