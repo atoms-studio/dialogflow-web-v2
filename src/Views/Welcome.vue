@@ -32,7 +32,7 @@
     width: 120px
     height: 120px
     border-radius: 16px
-    object-fit: cover
+    object-fit: contain
     background-color: var(--image-background)
 
 .app-title
