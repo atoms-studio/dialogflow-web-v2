@@ -61,10 +61,10 @@
     margin-right: 13px
     z-index: 999
     padding: 8px
-    background-color: var(--element-background)
+    background-color: #f9cc25
     border-radius: 20px 0 0 20px
     cursor: pointer
-    color: var(--text)
+    fill: #033467
     transition: padding .25s ease
     border: 1px solid var(--border)
     border-right: 0px

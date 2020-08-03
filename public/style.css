@@ -15,6 +15,47 @@
 .chatbotdas_html {
 }
 
+.message_bubble {
+  font-family: Google Sans, Roboto, sans-serif;
+  text-align: left;
+  float: left;
+  position: absolute;
+  right: 142px;
+  width: 166px;
+  color: white;
+  background: #003169;
+  border-radius: 8px;
+  padding: 0px 6px;
+  padding-left: 12px;
+  font-size: 16px;
+  line-height: 12px;
+  bottom: 6px;
+  display: none;
+  pointer-events: none;
+}
+
+.message_bubble::after{
+  content: "";
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 10px 0 10px 19px;
+  border-color: transparent transparent transparent #003169;
+  right: -18px;
+  position: absolute;
+  top: 27px;
+  z-index: -1;
+}
+
+.close_message_bubble{
+  display: inline;
+  right: 8px;
+  position: absolute;
+  top: -7px;
+  cursor: pointer;
+  pointer-events: all;
+}
+
 .chat-pop-up {
   background-size: contain;
   border-radius: 11px;
@@ -76,9 +117,6 @@
   justify-content: space-between;
   color: #ffffff;
   font-family: "Galano Grotesque Alt", "Open Sans", sans-serif;
-  font-size: 20px;
-  font-weight: 600;
-  line-height: 27px;
   opacity: 1;
   transition: opacity 0.2s 0.2s ease-out;
   margin: 0 auto;
