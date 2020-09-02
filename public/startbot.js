@@ -3,10 +3,13 @@ const chatPopUp = document.querySelector('.chat-pop-up')
 
 const messageVisibility = () => {
     const openedChat = localStorage.getItem('daisy_chatbot_opened') || false
-    if (openedChat){
-        document.getElementById('message_bubble').style.display = 'none'
-    } else {
-        document.getElementById('message_bubble').style.display = 'block'
+    const bubble = document.getElementById('message_bubble')
+    if (bubble){
+        if (openedChat){
+            bubble.style.display = 'none'
+        } else {
+            bubble.style.display = 'block'
+        }
     }
 }
 
@@ -14,9 +17,11 @@ const hideMessageBubble = () => {
     localStorage.setItem('daisy_chatbot_opened', true)
     messageVisibility()
 }
-document.querySelector('.close_message_bubble').addEventListener('click', () => {
+const closeMessage = document.querySelector('.close_message_bubble')
+
+if (closeMessage){ closeMessage.addEventListener('click', () => {
     hideMessageBubble()
-})
+}) }
 
 messageVisibility()
 
