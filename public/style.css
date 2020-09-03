@@ -19,7 +19,7 @@
   font-family: Google Sans, Roboto, sans-serif;
   text-align: left;
   float: left;
-  position: absolute;
+  position: fixed;
   right: 142px;
   width: 184px;
   background: #003169;
@@ -31,6 +31,7 @@
   bottom: 6px;
   display: none;
   pointer-events: none;
+  z-index: 10000;
 }
 
 .message_bubble p{
