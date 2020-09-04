@@ -2,7 +2,7 @@ const toggleButton = document.querySelector('.toggle-chat')
 const chatPopUp = document.querySelector('.chat-pop-up')
 
 const messageVisibility = () => {
-    const openedChat = localStorage.getItem('daisy_chatbot_opened') || false
+    const openedChat = sessionStorage.getItem('daisy_chatbot_opened') || false
     const bubble = document.getElementById('message_bubble')
     if (bubble){
         if (openedChat){
@@ -14,7 +14,7 @@ const messageVisibility = () => {
 }
 
 const hideMessageBubble = () => {
-    localStorage.setItem('daisy_chatbot_opened', true)
+    if (sessionStorage) sessionStorage.setItem('daisy_chatbot_opened', true)
     messageVisibility()
 }
 const closeMessage = document.querySelector('.close_message_bubble')
