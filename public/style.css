@@ -16,6 +16,7 @@
 }
 
 .message_bubble {
+  border: 2px solid #f9cc25;
   font-family: Google Sans, Roboto, sans-serif;
   text-align: left;
   float: left;
@@ -44,14 +45,26 @@
 
 .message_bubble::after{
   content: "";
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-width: 10px 0 10px 19px;
-  border-color: transparent transparent transparent #003169;
-  right: -18px;
+  width: 30px;
+  height: 36px;
+  background: #003169;
+  right: 0px;
+  position: absolute;
+  top: 20px;
+  z-index: 1;
+}
+
+.message_bubble::before{
+  content: "";
+  width: 20px;
+  height: 20px;
+  background:  #003169;
+  right: -11px;
   position: absolute;
   top: 27px;
+  transform: rotate(45deg);
+  border: 2px solid #f9cc25;
+  z-index: 1;
 }
 
 .close_message_bubble{
@@ -61,6 +74,7 @@
   top: -7px;
   cursor: pointer;
   pointer-events: all;
+  z-index: 111111;
 }
 
 .chat-pop-up {
