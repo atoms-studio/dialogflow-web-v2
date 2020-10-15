@@ -33,11 +33,11 @@
                 <Error v-if="error" :error="error" />
 
                 <!-- Welcome component is for onboarding experience and language picker -->
-                <Welcome v-if="app && messages.length == 0" :app="app" />
+                <!-- <Welcome v-if="app && messages.length == 0" :app="app" />-->
 
                 <!-- Messages Table -->
-                <section v-else aria-live="polite">
-                    <div v-for="message in messages" id="message" :key="message.responseId" ref="message">
+                <section v-if="app && messages.length !== 0" aria-live="polite">
+                    <div v-for="(message, index) in messages" id="message" :key="message.responseId" ref="message">
                         <!-- My message -->
                         <BubbleWrapper v-if="userMessagePDF(message)">
                             <UserBubble me>
@@ -48,7 +48,7 @@
                             </UserBubble>
                         </BubbleWrapper>
                         <span v-else>
-                            <BubbleWrapper><UserBubble v-if="message.queryResult.queryText" :text="message.queryResult.queryText" me /></BubbleWrapper>
+                            <BubbleWrapper v-if="index !== 0"><UserBubble v-if="message.queryResult.queryText" :text="message.queryResult.queryText" me /></BubbleWrapper>
                         </span>
                         <RichComponent v-if="message.queryResult.fulfillmentMessages.length === 0 && message.queryResult.knowledgeAnswers && message.queryResult.knowledgeAnswers.answers" class="knowledgeAnswer">
                             <Bubble
@@ -462,7 +462,7 @@ Vue.prototype.lang = () => {
 }
 
 
-import Welcome from './Welcome.vue'
+// import Welcome from './Welcome.vue'
 
 import Error from '@/Components/Parts/Error.vue'
 import TopHead from '@/Components/Parts/TopHead.vue'
@@ -493,7 +493,7 @@ import FileUpload from '@/Components/FileUpload.vue'
 export default {
     name: 'App',
     components: {
-        Welcome,
+        // Welcome,
         Error,
         TopHead,
         ChatInput,
@@ -617,7 +617,10 @@ export default {
             this.client.get()
             .then(agent => {
                 this.app = agent
-                if (this.history()) sessionStorage.setItem('agent', JSON.stringify(agent))
+                this.send({text: 'parla con me'})
+                if (this.history()){
+                    sessionStorage.setItem('agent', JSON.stringify(agent))
+                }
             })
             .catch(error => {
                 this.error = error.message
