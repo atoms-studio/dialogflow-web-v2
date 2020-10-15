@@ -16,7 +16,7 @@
 }
 
 .message_bubble {
-  border: 2px solid #f9cc25;
+  border: 3px solid #f9cc25;
   font-family: Google Sans, Roboto, sans-serif;
   text-align: left;
   float: left;
@@ -46,7 +46,7 @@
 .message_bubble::after{
   content: "";
   width: 30px;
-  height: 36px;
+  height: 40px;
   background: #003169;
   right: 0px;
   position: absolute;
@@ -63,7 +63,7 @@
   position: absolute;
   top: 27px;
   transform: rotate(45deg);
-  border: 2px solid #f9cc25;
+  border: 3px solid #f9cc25;
   z-index: 1;
 }
 
