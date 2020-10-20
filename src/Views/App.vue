@@ -515,6 +515,12 @@ export default {
         Portal
     },
     mixins: [OverlayMixin],
+    props: {
+        messagenow: {
+            type: Boolean,
+            default: false
+        }
+    },
     data(){
         return {
             app: null,
@@ -565,6 +571,14 @@ export default {
         }
     },
     watch: {
+        messagenow(sendMessageNow){
+            if (sendMessageNow && this.session !== '' && this.messages.length === 0){
+                this.client.get()
+                .then(() => {
+                    this.send({text: 'parla con me'})
+                })
+            }
+        },
         /* This function is triggered, when new messages arrive */
         messages(messages){
             if (this.history()){ // <- Save history if the feature is enabled
@@ -617,7 +631,6 @@ export default {
             this.client.get()
             .then(agent => {
                 this.app = agent
-                this.send({text: 'parla con me'})
                 if (this.history()){
                     sessionStorage.setItem('agent', JSON.stringify(agent))
                 }

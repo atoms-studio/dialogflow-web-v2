@@ -1,6 +1,8 @@
 const toggleButton = document.querySelector('.toggle-chat')
 const chatPopUp = document.querySelector('.chat-pop-up')
 
+const chatbot_vue = document.getElementById('chatbot_vue')
+
 const messageVisibility = () => {
     const openedChat = sessionStorage.getItem('daisy_chatbot_opened') || false
     const bubble = document.getElementById('message_bubble')
@@ -26,6 +28,9 @@ if (closeMessage){ closeMessage.addEventListener('click', () => {
 messageVisibility()
 
 toggleButton.addEventListener('click', () => {
+    if (chatbot_vue){
+        chatbot_vue.setAttribute('messagenow', 'true')
+    }
     toggleButton.classList.toggle('chat-is-open')
     chatPopUp.classList.toggle('chat-display-on')
     chatPopUp.classList.toggle('chat-visible')
